@@ -5,6 +5,24 @@ import com.janewaitara.medec.App
 import com.janewaitara.medec.R
 
 class CredentialsValidator: Validator {
+
+    private lateinit var email: String
+    private lateinit var password: String
+
+    override fun setCredentials(email: String, password: String) {
+        this.email = email
+        this.password = password
+    }
+
+    override fun isEmailEmpty(): Boolean =  email.isEmpty()
+
+    override fun isPasswordEmpty(): Boolean = password.isEmpty()
+
+    override fun isPasswordValid(): Boolean  = password.length >= 6
+
+    override fun areCredentialsValid(): Boolean = !isEmailEmpty() && !isPasswordEmpty() && isPasswordValid()
+
+
     override fun validatePassword(password: String, passwordWrapper: TextInputLayout): Boolean {
         return when{
             password.isEmpty() -> {
