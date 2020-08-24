@@ -6,5 +6,8 @@
     <string name="phone_hint">Enter Your phone number</string>
     <string name="register">Register</string>
     <string name="already_registered">Already Registered? Login Here</string>
+    <string name="password_empty_error">Password can not be empty</string>
+    <string name="password_length_error">Password should be greater than 6</string>
+    <string name="email_empty_error">Email address can not be empty</string>
 
 </resources>
