@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Medec</string>
+    <string name="full_name_hint">Enter Your full Name</string>
+    <string name="email_hint">Enter Your email Address</string>
+    <string name="password_hint">Enter Your password</string>
+    <string name="phone_hint">Enter Your phone number</string>
+    <string name="register">Register</string>
+    <string name="already_registered">Already Registered? Login Here</string>
+
 </resources>
