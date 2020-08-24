@@ -23,9 +23,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun setOnClickListener() {
         btn_register.onClick {
+            val userName = register_fullname.text.toString()
             val email = register_email.text.toString().trim()
             val password = register_password.text.toString().trim()
-            registerViewModel.validateCredentials(email, password)
+            registerViewModel.validateCredentials(userName, email, password)
         }
     }
     private fun subscribeToData() {
@@ -40,6 +41,8 @@ class RegisterActivity : AppCompatActivity() {
         when(registerViewState){
 
             Loading -> showLoading(true)
+            UserNameIsEmpty -> setUserNameEmptyError(true)
+            UserNameIsNotEmpty ->  setUserNameEmptyError(false)
             EmptyEmail -> setEmailEmptyError(true)
             EmailNotEmpty -> setEmailEmptyError(false)
             PasswordEmpty -> setPassWordEmptyError(true)
@@ -50,9 +53,19 @@ class RegisterActivity : AppCompatActivity() {
 
         }
 
-
     private fun showLoading(isLoading: Boolean) {
         register_progress_bar.isVisible(isLoading)
+    }
+
+    private fun setUserNameEmptyError(setError: Boolean) {
+
+        showLoading(false)
+        if (setError){
+            register_nameWrapper.error = getString(R.string.user_name_empty_error)
+        }else  {
+            register_nameWrapper.isErrorEnabled = false
+        }
+
     }
 
     private fun setEmailEmptyError(setError: Boolean) {
