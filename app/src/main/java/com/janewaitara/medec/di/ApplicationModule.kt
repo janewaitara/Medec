@@ -5,7 +5,10 @@ import com.janewaitara.medec.common.utils.CredentialsValidator
 import com.janewaitara.medec.common.utils.Validator
 import org.koin.dsl.module
 
-val applicationModule = module {
-
-        scope<Validator> { CredentialsValidator()}
+val applicationModule = module(true) {
+        scope<RegisterActivity> {
+                scoped<Validator> {
+                       get()}
+        }
+        factory { CredentialsValidator() }
 }

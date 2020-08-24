@@ -14,6 +14,4 @@ interface Validator {
 
     fun areCredentialsValid(): Boolean
 
-    fun validatePassword(password: String, passwordWrapper: TextInputLayout): Boolean
-    fun validateEmail(email: String, emailWrapper: TextInputLayout): Boolean
 }
