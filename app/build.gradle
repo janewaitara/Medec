@@ -48,5 +48,10 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutines"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutines"
 
+    //koin dependency
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
+    implementation "org.koin:koin-androidx-scope:$koinVersion"
+
 
 }

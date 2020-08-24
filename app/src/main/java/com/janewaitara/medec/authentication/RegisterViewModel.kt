@@ -17,17 +17,50 @@ class RegisterViewModel(
 
     fun getRegisterViewState(): LiveData<RegisterViewState> = registerViewState
 
-    fun validateCredentials(password: String, passwordWrapper: TextInputLayout){
+    fun validateCredentials(email: String, password: String){
         registerViewState.value = Loading
+        checkIfEmailIsEmpty()
+        checkIfPasswordIsEmpty()
+        checkPasswordValidity()
+        if (credentialsValidator.areCredentialsValid()){
+            registerViewState.value = RegisterUser
+        }
 
-        viewModelScope.launch {
-           val passwordIsValid = credentialsValidator.validatePassword(password, passwordWrapper)
+    }
 
+    private fun checkIfPasswordIsEmpty(){
+        if (credentialsValidator.isPasswordEmpty()){
+            registerViewState.value = PasswordEmpty
+        }else{
+            registerViewState.value = PassWordNotEmpty
         }
     }
 
+    private fun checkIfEmailIsEmpty(){
+        if (credentialsValidator.isEmailEmpty()){
+            registerViewState.value  = EmptyEmail
+        }else{
+            registerViewState.value = EmailNotEmpty
+        }
+    }
+
+    private fun checkPasswordValidity(){
+        if (!credentialsValidator.isPasswordValid()){
+            registerViewState.value = InValidPassWord
+        }else{
+            registerViewState.value = ValidPassWord
+        }
+    }
 }
 
 sealed class RegisterViewState
-data class UserRegistered(val isRegistered: Boolean): RegisterViewState()
+object RegisterUser: RegisterViewState()
 object Loading: RegisterViewState()
+object EmptyEmail: RegisterViewState()
+object EmailNotEmpty: RegisterViewState()
+object ValidPassWord: RegisterViewState()
+object InValidPassWord: RegisterViewState()
+object PasswordEmpty: RegisterViewState()
+object PassWordNotEmpty: RegisterViewState()
+
+
