@@ -4,7 +4,9 @@ import com.google.android.material.textfield.TextInputLayout
 
 interface Validator {
 
-    fun setCredentials(userName: String,email: String, password: String)
+    fun setLoginCredentials(email: String, password: String)
+
+    fun setRegisterCredentials(userName: String, email: String, password: String)
 
     fun isUserNameEmpty(): Boolean
 
@@ -15,5 +17,7 @@ interface Validator {
     fun isPasswordValid(): Boolean
 
     fun areCredentialsValid(): Boolean
+
+    fun areLoginCredentialsValid(): Boolean
 
 }

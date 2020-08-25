@@ -10,6 +10,9 @@
     <string name="password_length_error">Password should be greater than 6</string>
     <string name="email_empty_error">Email address can not be empty</string>
     <string name="user_name_empty_error">User name can not be empty</string>
+    <string name="login">Login</string>
+    <string name="dont_have_account">Don\'t have an account? Register Here</string>
+    <string name="forgot_password">Forgot Password?</string>
 
     <string-array name="userRoles">
         <item>Doctor</item>

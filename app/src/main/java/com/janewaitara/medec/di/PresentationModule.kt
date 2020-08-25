@@ -1,6 +1,7 @@
 package com.janewaitara.medec.di
 
-import com.janewaitara.medec.authentication.RegisterViewModel
+import com.janewaitara.medec.authentication.login.LoginViewModel
+import com.janewaitara.medec.authentication.register.RegisterViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -11,4 +12,5 @@ val presentationModule = module(true) {
    factory { provideValidator() }*/
 
   viewModel { RegisterViewModel(get()) }
+  viewModel { LoginViewModel(get()) }
 }

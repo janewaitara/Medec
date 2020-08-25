@@ -7,48 +7,24 @@ android:layout_height="match_parent"
 android:padding="30dp"
 android:layout_gravity="center"
 android:background="@color/backgroundColor"
-tools:context=".authentication.register.RegisterActivity">
+tools:context=".authentication.login.LoginActivity">
 
 <TextView
     android:id="@+id/app_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="20dp"
+    android:layout_marginTop="40dp"
+    android:text="@string/app_name"
     android:fontFamily="@font/aclonica"
     android:textAppearance="@style/TextAppearance.AppCompat.Large"
     android:textColor="#FFFFFF"
-    android:textSize="30sp"
+    android:textSize="24sp"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    android:text="@string/app_name" />
-<com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/register_nameWrapper"
-    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-    android:layout_width="match_parent"
-    android:ems="10"
-    app:errorEnabled="true"
-    android:layout_height="wrap_content"
-    android:hint="@string/full_name_hint"
-    app:boxBackgroundMode="outline"
-    app:endIconMode="clear_text"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.318"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/app_name"
-    app:layout_constraintVertical_bias="0.050">
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/register_fullname"
-        android:inputType="textPersonName"
-        android:layout_width="match_parent"
-        android:textColor="@color/colorPrimaryDark"
-        android:layout_height="wrap_content"/>
-</com.google.android.material.textfield.TextInputLayout>
+    app:layout_constraintTop_toTopOf="parent" />
 
 <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/register_emailWrapper"
+    android:id="@+id/login_emailWrapper"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:ems="10"
@@ -61,20 +37,19 @@ tools:context=".authentication.register.RegisterActivity">
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.318"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register_nameWrapper"
-    app:layout_constraintVertical_bias="0.050">
+    app:layout_constraintTop_toBottomOf="@+id/app_name"
+    app:layout_constraintVertical_bias="0.152">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/register_email"
+        android:id="@+id/login_email"
         android:inputType="textEmailAddress"
-        android:textColorHint="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:textColor="@color/colorPrimaryDark"
         android:layout_height="wrap_content"/>
 </com.google.android.material.textfield.TextInputLayout>
 
 <com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/register_passwordWrapper"
+    android:id="@+id/login_passwordWrapper"
     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
     android:layout_width="match_parent"
     android:ems="10"
@@ -87,45 +62,19 @@ tools:context=".authentication.register.RegisterActivity">
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.318"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register_emailWrapper"
-    app:layout_constraintVertical_bias="0.050">
+    app:layout_constraintTop_toBottomOf="@+id/login_emailWrapper"
+    app:layout_constraintVertical_bias="0.069">
 
     <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/register_password"
+        android:id="@+id/login_password"
         android:layout_width="match_parent"
         android:textColor="@color/colorPrimaryDark"
-        android:textColorHint="@color/colorPrimaryDark"
         android:inputType="textPassword"
         android:layout_height="wrap_content"/>
 </com.google.android.material.textfield.TextInputLayout>
 
-<com.google.android.material.textfield.TextInputLayout
-    android:id="@+id/register_phoneWrapper"
-    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-    android:layout_width="match_parent"
-    android:ems="10"
-    android:layout_height="wrap_content"
-    android:hint="@string/phone_hint"
-    app:boxBackgroundMode="outline"
-    app:endIconMode="clear_text"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.318"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register_passwordWrapper"
-    app:layout_constraintVertical_bias="0.050">
-
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/register_phone"
-        android:layout_width="match_parent"
-        android:textColorHint="@color/colorPrimaryDark"
-        android:textColor="@color/colorPrimaryDark"
-        android:inputType="textPhonetic"
-        android:layout_height="wrap_content"/>
-</com.google.android.material.textfield.TextInputLayout>
-
 <Spinner
-    android:id="@+id/register_UserRoles_spinner"
+    android:id="@+id/login_UserRoles_spinner"
     android:layout_width="match_parent"
     android:spinnerMode="dropdown"
     android:layout_height="wrap_content"
@@ -133,46 +82,56 @@ tools:context=".authentication.register.RegisterActivity">
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintHorizontal_bias="0.318"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register_phoneWrapper"
-    app:layout_constraintVertical_bias="0.150"
+    app:layout_constraintTop_toBottomOf="@+id/login_passwordWrapper"
+    app:layout_constraintVertical_bias="0.069"
     style="@style/Widget.AppCompat.Spinner.Underlined"/>
 
-
 <Button
-    android:id="@+id/btn_register"
-    android:layout_width="wrap_content"
+    android:id="@+id/btn_login"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="20dp"
     android:background="@drawable/button_round_corners"
-    android:text="@string/register"
+    android:text="@string/login"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/register_UserRoles_spinner" />
+    app:layout_constraintTop_toBottomOf="@id/login_UserRoles_spinner" />
 
 <TextView
-    android:layout_marginTop="10dp"
-    android:id="@+id/registered_login"
+    android:id="@+id/login_register"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:layout_goneMarginTop="16dp"
-    android:text="@string/already_registered"
+    android:layout_marginTop="10dp"
+    android:text="@string/dont_have_account"
     android:textColor="@color/loginregister_text_color"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/btn_register"
-    />
+    app:layout_constraintTop_toBottomOf="@id/btn_login"
+    app:layout_goneMarginTop="16dp" />
+<TextView
+    android:id="@+id/forgot_password"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="@string/forgot_password"
+    android:textColor="@color/loginregister_text_color"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/login_register"
+    app:layout_goneMarginTop="16dp" />
 
 <androidx.core.widget.ContentLoadingProgressBar
-    android:id="@+id/register_progress_bar"
+    android:id="@+id/login_progress_bar"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:visibility="invisible"
     style="?android:attr/progressBarStyleLarge"
-    android:outlineAmbientShadowColor="@color/colorPrimary"
-    android:outlineSpotShadowColor="@color/colorPrimaryDark"
+    android:visibility="invisible"
+    android:outlineAmbientShadowColor="@color/colorAccent"
+    android:outlineSpotShadowColor="@color/colorAccent"
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@+id/registered_login"
+    app:layout_constraintTop_toBottomOf="@id/forgot_password"
     />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,6 @@
-package com.janewaitara.medec.authentication
+package com.janewaitara.medec.authentication.register
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,8 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
+import com.janewaitara.medec.authentication.*
+import com.janewaitara.medec.authentication.login.LoginActivity
 import com.janewaitara.medec.common.extensions.isVisible
 import com.janewaitara.medec.common.extensions.onClick
 import kotlinx.android.synthetic.main.activity_register.*
@@ -53,6 +56,9 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             val email = register_email.text.toString().trim()
             val password = register_password.text.toString().trim()
             registerViewModel.validateCredentials(userName, email, password)
+        }
+        registered_login.onClick {
+            startActivity(Intent(this@RegisterActivity,LoginActivity::class.java))
         }
     }
     private fun subscribeToData() {
