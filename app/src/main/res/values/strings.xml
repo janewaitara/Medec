@@ -11,4 +11,9 @@
     <string name="email_empty_error">Email address can not be empty</string>
     <string name="user_name_empty_error">User name can not be empty</string>
 
+    <string-array name="userRoles">
+        <item>Doctor</item>
+        <item>Patient</item>
+    </string-array>
+
 </resources>
