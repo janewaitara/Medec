@@ -7,6 +7,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
 import com.janewaitara.medec.common.extensions.isVisible
 import com.janewaitara.medec.common.extensions.onClick
@@ -17,6 +18,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private val registerViewModel: RegisterViewModel by viewModel()
     private var arrayAdapter: ArrayAdapter<CharSequence>? = null
+    private lateinit var mFirebaseAuth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,15 +27,14 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setupSpinner()
         setOnClickListener()
         subscribeToData()
+        mFirebaseAuth = FirebaseAuth.getInstance()
     }
 
     private fun setupSpinner() {
-       /* arrayAdapter = ArrayAdapter(applicationContext,android.R.layout.simple_spinner_dropdown_item, R.array.userRoles)*/
-
         arrayAdapter = ArrayAdapter.createFromResource(this,R.array.userRoles, android.R.layout.simple_spinner_dropdown_item)
        /* (arrayAdapter as ArrayAdapter<CharSequence>).setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
 
- */       register_UserRoles_spinner.adapter = arrayAdapter
+ */     register_UserRoles_spinner.adapter = arrayAdapter
         register_UserRoles_spinner.onItemSelectedListener = this
     }
 
@@ -124,7 +125,24 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun registerUser() {
-        TODO("Not yet implemented")
+        showLoading(true)
+
+        val userName = register_fullname.text.toString()
+        val email = register_email.text.toString().trim()
+        val password = register_password.text.toString().trim()
+        val phoneContact = register_phone.text.toString()
+
+        mFirebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
+            if (task.isSuccessful){
+                showLoading(false)
+               Toast.makeText(this, "User Created Successfully", Toast.LENGTH_SHORT).show()
+            }else{
+                // If sign in fails, display a message to the user.
+                showLoading(false)
+                Toast.makeText(this, "Authentication failed." + task.exception?.message,Toast.LENGTH_SHORT).show()
+            }
+
+        }
     }
 
 }

@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -53,5 +54,7 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
     implementation "org.koin:koin-androidx-scope:$koinVersion"
 
+    //firebase authentication
+    implementation 'com.google.firebase:firebase-auth-ktx:19.3.2'
 
 }
