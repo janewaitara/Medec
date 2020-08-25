@@ -9,11 +9,14 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
+import com.janewaitara.medec.MainActivity
 import com.janewaitara.medec.R
 import com.janewaitara.medec.authentication.*
 import com.janewaitara.medec.authentication.login.LoginActivity
 import com.janewaitara.medec.common.extensions.isVisible
 import com.janewaitara.medec.common.extensions.onClick
+import com.janewaitara.medec.model.DoctorsDetails
+import com.janewaitara.medec.model.PatientsDetails
 import kotlinx.android.synthetic.main.activity_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -22,6 +25,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private val registerViewModel: RegisterViewModel by viewModel()
     private var arrayAdapter: ArrayAdapter<CharSequence>? = null
     private lateinit var mFirebaseAuth: FirebaseAuth
+    private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +35,10 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setOnClickListener()
         subscribeToData()
         mFirebaseAuth = FirebaseAuth.getInstance()
+
+        if(mFirebaseAuth.currentUser != null){
+            startActivity(Intent(applicationContext,MainActivity::class.java))
+        }
     }
 
     private fun setupSpinner() {
@@ -59,6 +67,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
         registered_login.onClick {
             startActivity(Intent(this@RegisterActivity,LoginActivity::class.java))
+            finish()
         }
     }
     private fun subscribeToData() {
@@ -142,6 +151,27 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             if (task.isSuccessful){
                 showLoading(false)
                Toast.makeText(this, "User Created Successfully", Toast.LENGTH_SHORT).show()
+
+                userId = mFirebaseAuth.currentUser?.uid
+                if (register_UserRoles_spinner.selectedItem.toString() == "Doctor"){
+                    var doctorsDetails =  DoctorsDetails().apply {
+                        docId = userId!!
+                        docName = userName
+                        doctorEmailAddress = email
+                        doctorContact = phoneContact.toInt()
+                    }
+
+                    registerViewModel.saveDoctorDetails(doctorsDetails)
+
+                }else if (register_UserRoles_spinner.selectedItem.toString() == "Patient"){
+                    var patientsDetails = PatientsDetails().apply {
+                        patId = userId!!
+                        patientName = userName
+                        patientEmailAddress = email
+                        patientContact = phoneContact.toInt()
+                    }
+                    registerViewModel.savePatientDetails(patientsDetails)
+                }
             }else{
                 // If sign in fails, display a message to the user.
                 showLoading(false)
