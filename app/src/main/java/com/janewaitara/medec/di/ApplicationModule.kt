@@ -1,7 +1,7 @@
 package com.janewaitara.medec.di
 
-import com.janewaitara.medec.authentication.login.LoginActivity
-import com.janewaitara.medec.authentication.register.RegisterActivity
+import com.janewaitara.medec.ui.authentication.login.LoginActivity
+import com.janewaitara.medec.ui.authentication.register.RegisterActivity
 import com.janewaitara.medec.common.utils.CredentialsValidator
 import com.janewaitara.medec.common.utils.Validator
 import org.koin.dsl.module

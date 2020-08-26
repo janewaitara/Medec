@@ -1,4 +1,4 @@
-package com.janewaitara.medec.authentication.login
+package com.janewaitara.medec.ui.authentication.login
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
-import com.janewaitara.medec.authentication.register.RegisterActivity
+import com.janewaitara.medec.ui.authentication.register.RegisterActivity
 import com.janewaitara.medec.common.extensions.*
 import kotlinx.android.synthetic.main.activity_login.*
 import org.koin.androidx.viewmodel.ext.android.viewModel

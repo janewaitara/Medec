@@ -1,4 +1,4 @@
-package com.janewaitara.medec.authentication.register
+package com.janewaitara.medec.ui.authentication.register
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -11,8 +11,7 @@ import androidx.lifecycle.Observer
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.MainActivity
 import com.janewaitara.medec.R
-import com.janewaitara.medec.authentication.*
-import com.janewaitara.medec.authentication.login.LoginActivity
+import com.janewaitara.medec.ui.authentication.login.LoginActivity
 import com.janewaitara.medec.common.extensions.isVisible
 import com.janewaitara.medec.common.extensions.onClick
 import com.janewaitara.medec.model.DoctorsDetails
@@ -36,6 +35,9 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         subscribeToData()
         mFirebaseAuth = FirebaseAuth.getInstance()
 
+        /**
+         * If the user is logged in, navigate to main activity
+         * */
         if(mFirebaseAuth.currentUser != null){
             startActivity(Intent(applicationContext,MainActivity::class.java))
         }

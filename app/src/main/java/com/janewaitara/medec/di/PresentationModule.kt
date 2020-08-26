@@ -1,7 +1,7 @@
 package com.janewaitara.medec.di
 
-import com.janewaitara.medec.authentication.login.LoginViewModel
-import com.janewaitara.medec.authentication.register.RegisterViewModel
+import com.janewaitara.medec.ui.authentication.login.LoginViewModel
+import com.janewaitara.medec.ui.authentication.register.RegisterViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 

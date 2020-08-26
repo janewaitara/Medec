@@ -1,15 +1,16 @@
-package com.janewaitara.medec.authentication.register
+package com.janewaitara.medec.ui.authentication.register
 
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.janewaitara.medec.common.utils.CredentialsValidator
 import com.janewaitara.medec.model.DoctorsDetails
 import com.janewaitara.medec.model.PatientsDetails
+import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val credentialsValidator: CredentialsValidator
@@ -80,27 +81,31 @@ class RegisterViewModel(
     }
 
     fun saveDoctorDetails(doctorsDetails: DoctorsDetails){
-        fireStore.collection("doctors")
-            .document(doctorsDetails.docId)
-            .set(doctorsDetails)
-            .addOnSuccessListener {
-              Log.d("FireStore", "User profile created for: ${doctorsDetails.docName}")
-            }
-            .addOnFailureListener {
-                Log.d("FireStore", "Error adding document to firestore  with error: $it")
-            }
+        viewModelScope.launch {
+            fireStore.collection("doctors")
+                .document(doctorsDetails.docId)
+                .set(doctorsDetails)
+                .addOnSuccessListener {
+                    Log.d("FireStore", "User profile created for: ${doctorsDetails.docName}")
+                }
+                .addOnFailureListener {
+                    Log.d("FireStore", "Error adding document to firestore  with error: $it")
+                }
+        }
     }
 
     fun savePatientDetails(patientsDetails: PatientsDetails){
-        fireStore.collection("patients")
-            .document(patientsDetails.patId)
-            .set(patientsDetails)
-            .addOnSuccessListener {
-                Log.d("FireStore", "User profile created for: ${patientsDetails.patientName}")
-            }
-            .addOnFailureListener {
-                Log.d("FireStore", "Error adding document to firestore  with error: $it")
-            }
+        viewModelScope.launch {
+            fireStore.collection("patients")
+                .document(patientsDetails.patId)
+                .set(patientsDetails)
+                .addOnSuccessListener {
+                    Log.d("FireStore", "User profile created for: ${patientsDetails.patientName}")
+                }
+                .addOnFailureListener {
+                    Log.d("FireStore", "Error adding document to firestore  with error: $it")
+                }
+        }
     }
 }
 

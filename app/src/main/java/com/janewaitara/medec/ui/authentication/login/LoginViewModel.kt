@@ -1,4 +1,4 @@
-package com.janewaitara.medec.authentication.login
+package com.janewaitara.medec.ui.authentication.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
