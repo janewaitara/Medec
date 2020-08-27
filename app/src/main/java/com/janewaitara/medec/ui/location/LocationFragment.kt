@@ -6,20 +6,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.janewaitara.medec.R
 import com.janewaitara.medec.model.County
+import com.janewaitara.medec.model.DoctorsDetails
+import com.janewaitara.medec.model.PatientsDetails
+import com.janewaitara.medec.ui.authentication.register.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_location.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.IOException
 import java.io.InputStream
 
 
 class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
 
+    private val locationViewModel: LocationViewModel by viewModel()
     private val countyAdapter = CountyAdapter(this)
-
+    private lateinit var mFirebaseAuth: FirebaseAuth
     lateinit var counties: List<County>
+    private lateinit var userType: String
+    private var userId: String? = null
 
 
     override fun onCreateView(
@@ -32,7 +41,13 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        arguments?.let{
 
+          userType = LocationFragmentArgs.fromBundle(it).userType
+
+        }
+
+        mFirebaseAuth = FirebaseAuth.getInstance()
         setUpCountyRecyclerView()
         addCountiesFromJson()
     }
@@ -60,6 +75,28 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
     }
 
     override fun countyItemClicked(countyName: String) {
+
+        userId = mFirebaseAuth.currentUser?.uid
+        when(userType){
+            "Doctor" -> {
+                val doctorsDetails = DoctorsDetails().apply {
+                    docId = userId!!
+                    docLocation = countyName
+                }
+                locationViewModel.updateDoctorLocation(doctorsDetails)
+
+                Toast.makeText(activity, "Updated User Location", Toast.LENGTH_LONG).show()
+            }
+            "Patient" -> {
+                val patientsDetails = PatientsDetails().apply {
+                    patId = userId!!
+                    patientLocation = countyName
+                }
+                locationViewModel.updatePatientLocation(patientsDetails)
+
+                Toast.makeText(activity, "Updated User Location", Toast.LENGTH_LONG).show()
+            }
+        }
 
     }
 

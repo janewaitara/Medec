@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 android:padding="30dp"
 android:layout_gravity="center"
 android:background="@color/backgroundColor"
-tools:context=".ui.authentication.register.RegisterActivity">
+tools:context=".ui.authentication.register.RegisterFragment">
 
 <TextView
     android:id="@+id/app_name"

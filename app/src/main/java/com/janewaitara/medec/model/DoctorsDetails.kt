@@ -8,5 +8,6 @@ data class DoctorsDetails(
     var doctorEmailAddress: String = "",
     var doctorContact: Int = 0,
     var yearsOfExperience: String = "",
-    var docImageUrl: String = ""
+    var docImageUrl: String = "",
+    var docLocation: String = ""
 )

@@ -5,6 +5,7 @@ data class PatientsDetails(
     var patientName: String = "",
     var patientEmailAddress: String = "",
     var patientContact: Int = 0,
-    var patientImageUrl: String = ""
+    var patientImageUrl: String = "",
+    var patientLocation: String = ""
 
 )

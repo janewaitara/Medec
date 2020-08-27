@@ -1,50 +1,53 @@
 package com.janewaitara.medec.ui.authentication.register
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
-import com.janewaitara.medec.MainActivity
 import com.janewaitara.medec.R
-import com.janewaitara.medec.ui.authentication.login.LoginActivity
 import com.janewaitara.medec.common.extensions.isVisible
 import com.janewaitara.medec.common.extensions.onClick
 import com.janewaitara.medec.model.DoctorsDetails
 import com.janewaitara.medec.model.PatientsDetails
-import kotlinx.android.synthetic.main.activity_register.*
+import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
     private val registerViewModel: RegisterViewModel by viewModel()
     private var arrayAdapter: ArrayAdapter<CharSequence>? = null
     private lateinit var mFirebaseAuth: FirebaseAuth
     private var userId: String? = null
+    private lateinit var userType: String
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
 
-        setupSpinner()
-        setOnClickListener()
-        subscribeToData()
-        mFirebaseAuth = FirebaseAuth.getInstance()
+    override fun onCreateView(
+        inflater: LayoutInflater,container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_register, container, false)
+    }
 
-        /**
-         * If the user is logged in, navigate to main activity
-         * */
-        if(mFirebaseAuth.currentUser != null){
-            startActivity(Intent(applicationContext,MainActivity::class.java))
-        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+            setupSpinner()
+            setOnClickListener()
+            subscribeToData()
+            mFirebaseAuth = FirebaseAuth.getInstance()
+
     }
 
     private fun setupSpinner() {
-        arrayAdapter = ArrayAdapter.createFromResource(this,R.array.userRoles, android.R.layout.simple_spinner_dropdown_item)
+        arrayAdapter = ArrayAdapter.createFromResource(requireContext(),R.array.userRoles, android.R.layout.simple_spinner_dropdown_item)
        /* (arrayAdapter as ArrayAdapter<CharSequence>).setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
 
  */     register_UserRoles_spinner.adapter = arrayAdapter
@@ -52,28 +55,33 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-       Toast.makeText(this,"Nothing selected",Toast.LENGTH_LONG).show()
+       Toast.makeText(activity,"Nothing selected",Toast.LENGTH_LONG).show()
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 
+        userType = parent!!.getItemAtPosition(position).toString()
+        Toast.makeText(activity, "You selected $userType", Toast.LENGTH_SHORT).show()
     }
-
 
     private fun setOnClickListener() {
         btn_register.onClick {
             val userName = register_fullname.text.toString()
             val email = register_email.text.toString().trim()
             val password = register_password.text.toString().trim()
+
             registerViewModel.validateCredentials(userName, email, password)
+
         }
         registered_login.onClick {
-            startActivity(Intent(this@RegisterActivity,LoginActivity::class.java))
-            finish()
+            view?.let {
+                val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+                it.findNavController().navigate(action)
+            }
         }
     }
     private fun subscribeToData() {
-        registerViewModel.getRegisterViewState().observe(this, Observer{ registerViewState ->
+        registerViewModel.getRegisterViewState().observe(viewLifecycleOwner, Observer{ registerViewState ->
             registerViewState?.let { registerViewState ->
                 onRegisterViewStateChanged(registerViewState)
             }
@@ -147,15 +155,17 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val userName = register_fullname.text.toString()
         val email = register_email.text.toString().trim()
         val password = register_password.text.toString().trim()
-        val phoneContact = register_phone.text.toString()
+        val phoneContact = register_phone.text.toString().trim()
 
         mFirebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener { task ->
             if (task.isSuccessful){
-                showLoading(false)
-               Toast.makeText(this, "User Created Successfully", Toast.LENGTH_SHORT).show()
+               // showLoading(false)
+               Toast.makeText(activity, "User Created Successfully", Toast.LENGTH_SHORT).show()
 
                 userId = mFirebaseAuth.currentUser?.uid
-                if (register_UserRoles_spinner.selectedItem.toString() == "Doctor"){
+                //userType = register_UserRoles_spinner.selectedItem.toString()
+
+                if (userType == "Doctor"){
                     var doctorsDetails =  DoctorsDetails().apply {
                         docId = userId!!
                         docName = userName
@@ -165,7 +175,7 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
                     registerViewModel.saveDoctorDetails(doctorsDetails)
 
-                }else if (register_UserRoles_spinner.selectedItem.toString() == "Patient"){
+                }else if (userType == "Patient"){
                     var patientsDetails = PatientsDetails().apply {
                         patId = userId!!
                         patientName = userName
@@ -176,11 +186,16 @@ class RegisterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 }
             }else{
                 // If sign in fails, display a message to the user.
-                showLoading(false)
-                Toast.makeText(this, "Authentication failed." + task.exception?.message,Toast.LENGTH_SHORT).show()
+               // showLoading(false)
+                Toast.makeText(activity, "Authentication failed." + task.exception?.message,Toast.LENGTH_SHORT).show()
             }
-
         }
-    }
 
+        view?.let {
+
+            val action = RegisterFragmentDirections.actionRegisterFragmentToLoginFragment()
+            it.findNavController().navigate(action)
+        }
+
+    }
 }
