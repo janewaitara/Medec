@@ -25,5 +25,13 @@
     <string name="home">Home</string>
     <string name="chats">Chats</string>
     <string name="account">Account</string>
+    <string name="doctor_name">Doctor\'s Name</string>
+    <string name="doctor_title">Doctor\'s Title</string>
+    <string name="doctor">Doctor</string>
+    <string name="search_doc">Search doctor \n around you</string>
+    <string name="medicines_option">Medicines</string>
+    <string name="order_medicine">Order medicine \n to home</string>
+    <string name="diagnostics_option">Diagnostics</string>
+    <string name="book_tests">Book tests at \n door step</string>
 
 </resources>

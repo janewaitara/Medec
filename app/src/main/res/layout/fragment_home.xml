@@ -1,14 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.patients.home.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <View
+        android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello Home Fragment " />
+        android:layout_height="70.7dp"
+        android:background="@drawable/landing_top_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+    </View>
+
+    <!-- <TextView
+         android:id="@+id/textView3"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dp"
+         android:layout_marginStart="16dp"
+         android:gravity="center_horizontal"
+         android:lineSpacingExtra="6sp"
+         android:text="Medico"
+         android:textStyle="bold"
+         android:textColor="@android:color/white"
+         android:textSize="24sp"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="@+id/view" />-->
+
+
+    <ImageView
+        android:id="@+id/doc_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/circle"
+        android:padding="10dp"
+        android:src="@drawable/nurse"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+    <TextView
+        android:id="@+id/doctor_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/doctor"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/doc_icon"
+        app:layout_constraintStart_toStartOf="@+id/doc_icon"
+        app:layout_constraintTop_toBottomOf="@+id/doc_icon" />
+
+
+    <TextView
+        android:id="@+id/search_doc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/search_doc"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/doctor_option"
+        app:layout_constraintStart_toStartOf="@+id/doctor_option"
+        app:layout_constraintTop_toBottomOf="@+id/doctor_option" />
+
+    <ImageView
+        android:id="@+id/medicines_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle"
+        android:padding="10dp"
+        android:src="@drawable/nurse"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toStartOf="@+id/diagnostics_icon"
+        app:layout_constraintStart_toEndOf="@+id/doc_icon"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <TextView
+        android:id="@+id/medicine_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/medicines_option"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/medicines_icon"
+
+        app:layout_constraintStart_toStartOf="@+id/medicines_icon"
+        app:layout_constraintTop_toBottomOf="@+id/medicines_icon" />
+
+    <TextView
+        android:id="@+id/order_medicine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/order_medicine"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/medicine_option"
+        app:layout_constraintStart_toStartOf="@+id/medicine_option"
+        app:layout_constraintTop_toBottomOf="@+id/medicine_option" />
+
+    <ImageView
+        android:id="@+id/diagnostics_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/circle"
+        android:padding="10dp"
+        android:src="@drawable/nurse"
+        app:layout_constraintBottom_toBottomOf="@+id/view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+
+    <TextView
+        android:id="@+id/diagnostics_option"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/diagnostics_option"
+        android:textColor="@android:color/black"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/diagnostics_icon"
+        app:layout_constraintStart_toStartOf="@+id/diagnostics_icon"
+        app:layout_constraintTop_toBottomOf="@+id/diagnostics_icon" />
+
+    <TextView
+        android:id="@+id/book_tests"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/book_tests"
+        android:textColor="@android:color/black"
+        app:layout_constraintEnd_toEndOf="@+id/diagnostics_option"
+        app:layout_constraintStart_toStartOf="@+id/diagnostics_option"
+        app:layout_constraintTop_toBottomOf="@+id/diagnostics_option" />
+
+    <ImageView
+        android:id="@+id/landing_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:src="@drawable/landingpage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:scrollbars="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/landing_image"
+        tools:listitem="@layout/doctors_near_by" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
