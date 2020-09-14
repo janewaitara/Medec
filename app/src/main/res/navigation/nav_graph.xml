@@ -13,6 +13,9 @@
         <argument
             android:name="userType"
             app:argType="string" />
+        <action
+            android:id="@+id/action_locationFragment_to_patientsFragment"
+            app:destination="@id/patientsFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -35,4 +38,9 @@
             android:id="@+id/action_loginFragment_to_locationFragment"
             app:destination="@id/locationFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/patientsFragment"
+        android:name="com.janewaitara.medec.ui.patients.PatientsFragment"
+        android:label="fragment_patients"
+        tools:layout="@layout/fragment_patients" />
 </navigation>

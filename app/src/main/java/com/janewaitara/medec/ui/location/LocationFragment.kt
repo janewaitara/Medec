@@ -7,6 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
@@ -95,6 +97,13 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
                 locationViewModel.updatePatientLocation(patientsDetails)
 
                 Toast.makeText(activity, "Updated User Location", Toast.LENGTH_LONG).show()
+
+                /**
+                 * navigate to Patients page*/
+                view?.let {
+                    val action = LocationFragmentDirections.actionLocationFragmentToPatientsFragment()
+                    it.findNavController().navigate(action)
+                }
             }
         }
 

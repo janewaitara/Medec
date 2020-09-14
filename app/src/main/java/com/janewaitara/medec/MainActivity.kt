@@ -1,6 +1,5 @@
 package com.janewaitara.medec
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
          * If the user is logged in, navigate to main activity
          * */
         if(mFirebaseAuth.currentUser != null){
-           navController.navigate(R.id.locationFragment)
+           navController.navigate(R.id.patientsFragment)
         }
     }
 }
