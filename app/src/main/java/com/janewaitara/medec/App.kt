@@ -34,7 +34,8 @@ class App: Application() {
             modules(
                 listOf(
                     applicationModule,
-                    presentationModule
+                    presentationModule,
+                    repositoryModule
                 )
             )
         }

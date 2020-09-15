@@ -1,32 +1,21 @@
 package com.janewaitara.medec.ui.authentication.register
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.janewaitara.medec.common.utils.CredentialsValidator
 import com.janewaitara.medec.model.DoctorsDetails
 import com.janewaitara.medec.model.PatientsDetails
+import com.janewaitara.medec.repository.FirebaseRepository
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
-    private val credentialsValidator: CredentialsValidator
+    private val credentialsValidator: CredentialsValidator, private val firebaseRepository: FirebaseRepository
 ): ViewModel() {
 
-    private lateinit var fireStore : FirebaseFirestore
-
-    init {
-        fireStore = FirebaseFirestore.getInstance()
-        fireStore.firestoreSettings = FirebaseFirestoreSettings.Builder().build()
-    }
-
     private val registerViewState = MutableLiveData<RegisterViewState>()
-
     fun getRegisterViewState(): LiveData<RegisterViewState> = registerViewState
-
     fun validateCredentials(userName: String,email: String, password: String){
         registerViewState.value =
             Loading
@@ -42,6 +31,7 @@ class RegisterViewModel(
         }
 
     }
+
     private fun checkIfUserNameIsEmpty(){
         if (credentialsValidator.isUserNameEmpty()){
             registerViewState.value  =
@@ -69,7 +59,6 @@ class RegisterViewModel(
                 PassWordNotEmpty
         }
     }
-
     private fun checkPasswordValidity(){
         if (!credentialsValidator.isPasswordValid()){
             registerViewState.value =
@@ -82,29 +71,13 @@ class RegisterViewModel(
 
     fun saveDoctorDetails(doctorsDetails: DoctorsDetails){
         viewModelScope.launch {
-            fireStore.collection("doctors")
-                .document(doctorsDetails.docId)
-                .set(doctorsDetails)
-                .addOnSuccessListener {
-                    Log.d("FireStore", "User profile created for: ${doctorsDetails.docName}")
-                }
-                .addOnFailureListener {
-                    Log.d("FireStore", "Error adding document to firestore  with error: $it")
-                }
+            firebaseRepository.saveDoctorDetails(doctorsDetails)
         }
     }
 
     fun savePatientDetails(patientsDetails: PatientsDetails){
         viewModelScope.launch {
-            fireStore.collection("patients")
-                .document(patientsDetails.patId)
-                .set(patientsDetails)
-                .addOnSuccessListener {
-                    Log.d("FireStore", "User profile created for: ${patientsDetails.patientName}")
-                }
-                .addOnFailureListener {
-                    Log.d("FireStore", "Error adding document to firestore  with error: $it")
-                }
+            firebaseRepository.savePatientDetails(patientsDetails)
         }
     }
 }

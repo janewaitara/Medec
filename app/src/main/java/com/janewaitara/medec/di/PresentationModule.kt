@@ -12,7 +12,7 @@ val presentationModule = module(true) {
 
    factory { provideValidator() }*/
 
-  viewModel { RegisterViewModel(get()) }
+  viewModel { RegisterViewModel(get(),get()) }
   viewModel { LoginViewModel(get()) }
-  viewModel { LocationViewModel() }
+  viewModel { LocationViewModel(get()) }
 }
