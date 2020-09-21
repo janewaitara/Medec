@@ -3,14 +3,21 @@ package com.janewaitara.medec.ui.authentication.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.janewaitara.medec.common.utils.CredentialsValidator
+import com.janewaitara.medec.model.result.*
+import com.janewaitara.medec.repository.FirebaseRepository
+import kotlinx.coroutines.launch
 
-class LoginViewModel(private val credentialsValidator: CredentialsValidator
+class LoginViewModel(private val credentialsValidator: CredentialsValidator, private val firebaseRepository: FirebaseRepository
 ) : ViewModel(){
 
     private val loginViewState = MutableLiveData<LoginViewState>()
 
     fun getLoginViewState(): LiveData<LoginViewState> = loginViewState
+
+    private val userExistsMutableLiveData  = MutableLiveData<ResultResponseViewState>()
+    fun getUserExistenceLiveData() = userExistsMutableLiveData
 
     fun validateCredentials(email: String, password: String){
         loginViewState.value = Loading
@@ -54,6 +61,20 @@ class LoginViewModel(private val credentialsValidator: CredentialsValidator
         }
     }
 
+     fun confirmUserExistsInFireStoreCollection(userId: String, userType: String){
+        viewModelScope.launch {
+            firebaseRepository.confirmUserExistsInCollection(userId, userType) { result->
+                when(result){
+                    is Success -> {
+                        userExistsMutableLiveData.postValue(UserDocumentExists(result.data))
+                    }
+                    is Failure -> {
+                        userExistsMutableLiveData.postValue(ResultResponseError(result.error.localizedMessage ?: "" ))
+                    }
+                }
+            }
+        }
+    }
 }
 sealed class LoginViewState
 object LoginUser: LoginViewState()

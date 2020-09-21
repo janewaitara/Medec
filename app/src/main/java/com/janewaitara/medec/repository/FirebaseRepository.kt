@@ -60,6 +60,35 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
     }
 
     /**
+     * used to confirm whether a certain user is in the userType collection*/
+    fun confirmUserExistsInCollection(userId: String, userType: String, onUserNameReturned: (result: Result<Boolean>) -> Unit ){
+
+        fireStore.collection(userType)
+            .document(userId)
+            .get()
+            .addOnSuccessListener { documentSnapshot ->
+                if (documentSnapshot.exists()){
+                    onUserNameReturned.invoke(Success(true))
+                    /*
+                    var userDetailsName = ""
+                    if (collection == DOCTOR_COLLECTION){
+                        userDetailsName = documentSnapshot.toObject(DoctorsDetails::class.java)!!.docName
+                    }else if (collection == PATIENT_COLLECTION){
+                        userDetailsName = documentSnapshot.toObject(PatientsDetails::class.java)!!.patientName
+                    }
+                    onUserNameReturned.invoke(Success(userDetailsName))*/
+                }else{
+                    onUserNameReturned.invoke(Success(false))
+                }
+            }
+            .addOnFailureListener { exception->
+                onUserNameReturned.invoke(
+                    Failure(exception)
+                )
+            }
+    }
+
+    /**
      * Updating Doctor's Details*/
     fun updateDoctorLocation(doctorsDetails: DoctorsDetails) {
         fireStore.collection(DOCTOR_COLLECTION)

@@ -13,6 +13,9 @@ import androidx.navigation.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
 import com.janewaitara.medec.common.extensions.*
+import com.janewaitara.medec.model.result.ResultResponseError
+import com.janewaitara.medec.model.result.ResultResponseViewState
+import com.janewaitara.medec.model.result.UserDocumentExists
 import kotlinx.android.synthetic.main.fragment_login.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -142,24 +145,72 @@ class LoginFragment : Fragment(), AdapterView.OnItemSelectedListener {
         val loginEmail = login_email.text.toString().trim()
         val loginPassword = login_password.text.toString().trim()
 
-        mFirebaseAuth.signInWithEmailAndPassword(loginEmail,loginPassword).addOnCompleteListener { task ->
+        mFirebaseAuth.signInWithEmailAndPassword(loginEmail,loginPassword)
+            .addOnCompleteListener { task ->
             if (task.isSuccessful){
-                showLoading(false)
-                Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show()
 
+                val userId = mFirebaseAuth.currentUser?.uid
+                confirmUserExists( userId!!, userType)
+
+           /*Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show()
                 view?.let {
                     var action = LoginFragmentDirections.actionLoginFragmentToLocationFragment(userType)
                     it.findNavController().navigate(action)
                 }
-
+                */
             }else{
                 showLoading(false)
                 Toast.makeText(activity, "Login failed." + task.exception?.message,
-                    Toast.LENGTH_SHORT).show();
+                    Toast.LENGTH_SHORT).show()
 
             }
 
         }
+    }
+
+    private fun confirmUserExists(userId: String, userType: String) {
+        loginViewModel.confirmUserExistsInFireStoreCollection(userId, userType)
+
+        loginViewModel.getUserExistenceLiveData().observe(viewLifecycleOwner, Observer { resultResponseViewState->
+            resultResponseViewState?.let {resultViewState ->
+                onResultViewStateChanged(resultViewState)
+            }
+        })
+
+    }
+
+    private fun onResultViewStateChanged(resultViewState: ResultResponseViewState) {
+        when(resultViewState){
+            is UserDocumentExists -> performLoginAction(resultViewState.userExists)
+            is ResultResponseError -> showErrorMessage(resultViewState.error)
+        }
+    }
+
+    private fun performLoginAction(userExists: Boolean) {
+        showLoading(false)
+        if (userExists){
+
+            Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show()
+            view?.let {
+                val action = LoginFragmentDirections.actionLoginFragmentToLocationFragment(userType)
+                it.findNavController().navigate(action)
+            }
+
+            /*Toast.makeText(activity, "Logged in successfully", Toast.LENGTH_SHORT).show()
+           view?.let {
+               var action = LoginFragmentDirections.actionLoginFragmentToLocationFragment(userType)
+               it.findNavController().navigate(action)
+           }*/
+
+        }else{
+            Toast.makeText(activity, "Choose Correct user Type",
+                Toast.LENGTH_SHORT).show()
+
+        }
+    }
+
+    private fun showErrorMessage(error: String) {
+        Toast.makeText(activity, error, Toast.LENGTH_SHORT).show()
     }
 
 }
