@@ -20,6 +20,9 @@ class HomeViewModel( private val firebaseRepository: FirebaseRepository)
     private val doctorsDetailsListMutableLiveData = MutableLiveData<ResultResponseViewState>()
     fun getDoctorsListLiveData() = doctorsDetailsListMutableLiveData
 
+    private val patientDetailsListMutableLiveData = MutableLiveData<ResultResponseViewState>()
+    fun getPatientDetailsLiveData() = patientDetailsListMutableLiveData
+
     fun getDoctorsListFromFireStore(){
         viewModelScope.launch {
             firebaseRepository.getDoctorsFromFireStore {result ->
@@ -52,6 +55,39 @@ class HomeViewModel( private val firebaseRepository: FirebaseRepository)
                     is Failure -> {
                         nearByDoctorsDetailsListMutableLiveData.postValue(
                             ResultResponseError(result.error.localizedMessage ?: "")
+                        )
+                    }
+                    is EmptySuccess -> {
+                        nearByDoctorsDetailsListMutableLiveData.postValue(
+                            ResultResponseError(result.message)
+                        )
+                    }
+
+                }
+
+            }
+        }
+    }
+
+    fun getPatientDetailsFromFireStore(userId: String){
+        viewModelScope.launch {
+            firebaseRepository.getPatientsDetails(userId){ result ->
+                when(result){
+                    is Success -> {
+                        patientDetailsListMutableLiveData.postValue(
+                            PatientDetailsSuccessResult(result.data)
+                        )
+                    }
+
+                    is Failure -> {
+                        patientDetailsListMutableLiveData.postValue(
+                        ResultResponseError(result.error.localizedMessage ?: "")
+                        )
+                    }
+
+                    is EmptySuccess -> {
+                        patientDetailsListMutableLiveData.postValue(
+                            ResultResponseError(result.message)
                         )
                     }
                 }

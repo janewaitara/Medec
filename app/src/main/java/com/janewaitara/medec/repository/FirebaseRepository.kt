@@ -6,6 +6,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.janewaitara.medec.App
 import com.janewaitara.medec.model.*
+import com.janewaitara.medec.model.result.EmptySuccess
 import com.janewaitara.medec.model.result.Failure
 import com.janewaitara.medec.model.result.Result
 import com.janewaitara.medec.model.result.Success
@@ -42,10 +43,16 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             .whereEqualTo("docLocation", userLocation)
             .get()
             .addOnSuccessListener { querySnapsShot ->
-                val nearByDoctors = querySnapsShot.toObjects(DoctorsDetails::class.java)
-                onDoctorsReturned.invoke(
-                    Success(nearByDoctors)
-                )
+                if (querySnapsShot != null) {
+                    val nearByDoctors = querySnapsShot.toObjects(DoctorsDetails::class.java)
+                    onDoctorsReturned.invoke(
+                        Success(nearByDoctors)
+                    )
+                }else{
+                    onDoctorsReturned.invoke(
+                        EmptySuccess("There are no doctors near you")
+                    )
+                }
             }
             .addOnFailureListener { exception->
                 onDoctorsReturned.invoke(
@@ -53,7 +60,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
                 )
             }
     }
-    
+
     /**
      * Get all doctors details*/
     fun getDoctorsFromFireStore(onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit) {
@@ -120,7 +127,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             .addOnFailureListener {
                 Log.d("FireStore", "Error updating location details to firestore  with error: $it")
             }
-
     }
 
 
@@ -136,7 +142,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             .addOnFailureListener {
                 Log.d("FireStore", "Error adding document to firestore  with error: $it")
             }
-
     }
 
     /**
@@ -150,6 +155,30 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             }
             .addOnFailureListener {
                 Log.d("FireStore", "Error updating location details to firestore  with error: $it")
+            }
+    }
+
+    /**
+     * get patient Detail*/
+    fun getPatientsDetails(userId: String, onPatientsDetailsReturned: (result: Result<PatientsDetails>) -> Unit){
+        fireStore.collection(PATIENT_COLLECTION)
+            .document(userId)
+            .get()
+            .addOnSuccessListener { documentSnapShot->
+                if (documentSnapShot.exists()){
+                    val userDetails = documentSnapShot.toObject(PatientsDetails::class.java)
+                    onPatientsDetailsReturned.invoke(Success(userDetails!!))
+
+                }else{
+                    onPatientsDetailsReturned.invoke(
+                        EmptySuccess("The user does not exist ")
+                    )
+                }
+            }
+            .addOnFailureListener { exception ->
+                onPatientsDetailsReturned.invoke(
+                    Failure(exception)
+                )
             }
     }
 
