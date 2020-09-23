@@ -150,14 +150,37 @@
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
+    <TextView
+        android:id="@+id/near_by_doctors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/near_by_doctors"
+        android:textColor="#3f4079"
+        android:textSize="20sp"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="15dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/landing_image" />
+    <TextView
+        android:id="@+id/see_all_doctors"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/see_all"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@+id/landing_image" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_doctors_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="25dp"
         android:scrollbars="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/landing_image"
+        app:layout_constraintTop_toBottomOf="@+id/near_by_doctors"
         tools:listitem="@layout/doctors_near_by" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

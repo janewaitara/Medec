@@ -12,6 +12,11 @@ import kotlinx.coroutines.launch
 class HomeViewModel( private val firebaseRepository: FirebaseRepository)
     : ViewModel() {
 
+
+
+    private val nearByDoctorsDetailsListMutableLiveData = MutableLiveData<ResultResponseViewState>()
+    fun getNearByDoctorsListLiveData() = nearByDoctorsDetailsListMutableLiveData
+
     private val doctorsDetailsListMutableLiveData = MutableLiveData<ResultResponseViewState>()
     fun getDoctorsListLiveData() = doctorsDetailsListMutableLiveData
 
@@ -26,6 +31,26 @@ class HomeViewModel( private val firebaseRepository: FirebaseRepository)
                     }
                     is Failure -> {
                         doctorsDetailsListMutableLiveData.postValue(
+                            ResultResponseError(result.error.localizedMessage ?: "")
+                        )
+                    }
+                }
+
+            }
+        }
+    }
+
+    fun getNearByDoctorsFromFireStore(userLocation: String){
+        viewModelScope.launch {
+            firebaseRepository.getNearByDoctorsFromFireStore(userLocation){ result ->
+                when(result){
+                    is Success -> {
+                        Log.d("Near By Doctors Details", result.data.toString())
+                        nearByDoctorsDetailsListMutableLiveData.postValue(
+                            DoctorsListSuccessResult(result.data))
+                    }
+                    is Failure -> {
+                        nearByDoctorsDetailsListMutableLiveData.postValue(
                             ResultResponseError(result.error.localizedMessage ?: "")
                         )
                     }

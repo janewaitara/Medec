@@ -35,6 +35,27 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             }
 
     }
+    /**
+     * Get nearBy doctors */
+    fun getNearByDoctorsFromFireStore(userLocation: String, onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit){
+        fireStore.collection(DOCTOR_COLLECTION)
+            .whereEqualTo("docLocation", userLocation)
+            .get()
+            .addOnSuccessListener { querySnapsShot ->
+                val nearByDoctors = querySnapsShot.toObjects(DoctorsDetails::class.java)
+                onDoctorsReturned.invoke(
+                    Success(nearByDoctors)
+                )
+            }
+            .addOnFailureListener { exception->
+                onDoctorsReturned.invoke(
+                    Failure(exception)
+                )
+            }
+    }
+    
+    /**
+     * Get all doctors details*/
     fun getDoctorsFromFireStore(onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit) {
         fireStore.collection(DOCTOR_COLLECTION)
             .get()
@@ -62,7 +83,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
     /**
      * used to confirm whether a certain user is in the userType collection*/
     fun confirmUserExistsInCollection(userId: String, userType: String, onUserNameReturned: (result: Result<Boolean>) -> Unit ){
-
         fireStore.collection("${userType}s")
             .document(userId)
             .get()
@@ -131,8 +151,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             .addOnFailureListener {
                 Log.d("FireStore", "Error updating location details to firestore  with error: $it")
             }
-
-
     }
 
 }

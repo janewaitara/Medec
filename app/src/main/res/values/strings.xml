@@ -33,5 +33,7 @@
     <string name="order_medicine">Order medicine \n to home</string>
     <string name="diagnostics_option">Diagnostics</string>
     <string name="book_tests">Book tests at \n door step</string>
+    <string name="near_by_doctors">Doctors nearby you</string>
+    <string name="see_all">See All</string>
 
 </resources>
