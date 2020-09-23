@@ -63,7 +63,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
      * used to confirm whether a certain user is in the userType collection*/
     fun confirmUserExistsInCollection(userId: String, userType: String, onUserNameReturned: (result: Result<Boolean>) -> Unit ){
 
-        fireStore.collection(userType)
+        fireStore.collection("${userType}s")
             .document(userId)
             .get()
             .addOnSuccessListener { documentSnapshot ->

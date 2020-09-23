@@ -80,7 +80,7 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
 
         userId = mFirebaseAuth.currentUser?.uid
         when(userType){
-            "Doctor" -> {
+            "doctor" -> {
                 val doctorsDetails = DoctorsDetails().apply {
                     docId = userId!!
                     docLocation = countyName
@@ -89,7 +89,7 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
 
                 Toast.makeText(activity, "Updated User Location", Toast.LENGTH_LONG).show()
             }
-            "Patient" -> {
+            "patient" -> {
                 val patientsDetails = PatientsDetails().apply {
                     patId = userId!!
                     patientLocation = countyName

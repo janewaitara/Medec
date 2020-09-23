@@ -165,7 +165,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
                 userId = mFirebaseAuth.currentUser?.uid
                 //userType = register_UserRoles_spinner.selectedItem.toString()
 
-                if (userType == "Doctor"){
+                if (userType == "doctor"){
                     var doctorsDetails =  DoctorsDetails().apply {
                         docId = userId!!
                         docName = userName
@@ -175,7 +175,7 @@ class RegisterFragment : Fragment(), AdapterView.OnItemSelectedListener {
 
                     registerViewModel.saveDoctorDetails(doctorsDetails)
 
-                }else if (userType == "Patient"){
+                }else if (userType == "patient"){
                     var patientsDetails = PatientsDetails().apply {
                         patId = userId!!
                         patientName = userName
