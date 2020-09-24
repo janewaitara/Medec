@@ -34,7 +34,7 @@ tools:context=".ui.location.LocationFragment">
     app:layout_constraintVertical_bias="0.32" />
 
 <EditText
-    android:id="@+id/searchView"
+    android:id="@+id/search_location"
     android:layout_width="300dp"
     android:layout_height="40dp"
     android:iconifiedByDefault="false"
@@ -60,7 +60,7 @@ tools:context=".ui.location.LocationFragment">
     app:cardCornerRadius="10dp"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/searchView">
+    app:layout_constraintTop_toBottomOf="@id/search_location">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/county_recyclerView"

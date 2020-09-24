@@ -1,6 +1,8 @@
 package com.janewaitara.medec.ui.location
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -52,6 +54,37 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
         mFirebaseAuth = FirebaseAuth.getInstance()
         setUpCountyRecyclerView()
         addCountiesFromJson()
+        setUpSearchFunctionality()
+    }
+
+    private fun setUpSearchFunctionality() {
+        search_location.addTextChangedListener(object : TextWatcher{
+            override fun afterTextChanged(s: Editable?) {
+               filterLocation(s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+        })
+    }
+
+    private fun filterLocation(searchParameter: String) {
+
+        val filteredList =  arrayListOf<County>()
+
+        for (county in counties){
+            if (county.name.toLowerCase().contains(searchParameter.toLowerCase())){
+                filteredList.add(county)
+            }
+        }
+
+        countyAdapter.setCounties(filteredList)
     }
 
     private fun addCountiesFromJson() {
