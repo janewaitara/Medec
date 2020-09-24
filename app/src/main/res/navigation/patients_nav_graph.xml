@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.janewaitara.medec.ui.patients.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_allDoctors"
+            app:destination="@id/allDoctors" />
+    </fragment>
     <fragment
         android:id="@+id/chatsFragment"
         android:name="com.janewaitara.medec.ui.patients.chats.ChatsFragment"
@@ -20,4 +24,9 @@
         android:name="com.janewaitara.medec.ui.patients.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/allDoctors"
+        android:name="com.janewaitara.medec.ui.patients.allDoctors.AllDoctors"
+        android:label="fragment_all_doctors"
+        tools:layout="@layout/fragment_all_doctors" />
 </navigation>

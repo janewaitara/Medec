@@ -35,5 +35,7 @@
     <string name="book_tests">Book tests at \n door step</string>
     <string name="near_by_doctors">Doctors nearby you</string>
     <string name="see_all">See All</string>
+    <string name="doctor_image">Doctor Image</string>
+    <string name="doctor_location">Doctor\'s Location</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.janewaitara.medec.ui.patients.home
+package com.janewaitara.medec.ui.patients.allDoctors
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,46 +7,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.janewaitara.medec.R
-import com.janewaitara.medec.common.extensions.onClick
 import com.janewaitara.medec.model.DoctorsDetails
 import com.janewaitara.medec.model.result.DoctorsListSuccessResult
 import com.janewaitara.medec.model.result.ResultResponseError
 import com.janewaitara.medec.model.result.ResultResponseViewState
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.janewaitara.medec.ui.patients.home.DoctorsRecyclerAdapter
+import kotlinx.android.synthetic.main.fragment_all_doctors.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(),DoctorsRecyclerAdapter.DoctorDetailsClickListener {
-
-    private val homeViewModel: HomeViewModel by viewModel()
+class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener {
+    private val allDoctorsViewModel: AllDoctorsViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_all_doctors, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         subscribeToData()
-
-        see_all_doctors.onClick {
-            view.let {
-                val action = HomeFragmentDirections.actionHomeFragmentToAllDoctors()
-                it.findNavController().navigate(action)
-            }
-        }
     }
 
     private fun subscribeToData() {
-        homeViewModel.getDoctorsListFromFireStore()
+        allDoctorsViewModel.getDoctorsListFromFireStore()
 
-        homeViewModel.getDoctorsListLiveData().observe(viewLifecycleOwner, Observer { resultResponseViewState ->
+        allDoctorsViewModel.getDoctorsListLiveData().observe(viewLifecycleOwner, Observer { resultResponseViewState ->
             resultResponseViewState?.let { resultViewState ->
                 onResultViewStateChanged(resultViewState)
             }
@@ -65,9 +56,9 @@ class HomeFragment : Fragment(),DoctorsRecyclerAdapter.DoctorDetailsClickListene
     }
 
     private fun populateRecyclerView(doctorsList: List<DoctorsDetails>) {
-        rv_doctors_details.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        val adapter = DoctorsRecyclerAdapter(this)
-        rv_doctors_details.adapter = adapter
+        doctors_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        val adapter = AllDoctorsAdapter(this)
+        doctors_list.adapter = adapter
 
         adapter.setDoctorsList(doctorsList)
     }
@@ -75,5 +66,4 @@ class HomeFragment : Fragment(),DoctorsRecyclerAdapter.DoctorDetailsClickListene
     override fun doctorDetailsClickListener(doctorId: String) {
         TODO("Not yet implemented")
     }
-
 }
