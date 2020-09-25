@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.patients.chats.ChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/doctors_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello Chats Frgament" />
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/doctors_chat_list" />
 
-</FrameLayout>
+</RelativeLayout>
+
+

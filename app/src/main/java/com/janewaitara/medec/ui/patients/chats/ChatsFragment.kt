@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.janewaitara.medec.R
 
-class ChatsFragment : Fragment() {
+class ChatsFragment : Fragment() , ChatsAdapter.ChatDoctorClickListener{
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -15,6 +15,10 @@ class ChatsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_chats, container, false)
+    }
+
+    override fun chatDoctorClickListener(doctorId: String) {
+        TODO("Not yet implemented")
     }
 
 }
