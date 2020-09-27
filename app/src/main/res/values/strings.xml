@@ -38,5 +38,8 @@
     <string name="doctor_image">Doctor Image</string>
     <string name="doctor_location">Doctor\'s Location</string>
     <string name="doctor_last_message">Doctor Last Message : Hello Dear Patient, How can I help You</string>
+    <string name="edit_your_profile">Edit Your profile</string>
+    <string name="patient_contacts">Patient Contacts</string>
+    <string name="patient_name">Patient Name</string>
 
 </resources>

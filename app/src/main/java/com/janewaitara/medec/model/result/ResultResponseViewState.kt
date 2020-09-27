@@ -8,3 +8,4 @@ class DoctorsListSuccessResult(val data: List<DoctorsDetails>): ResultResponseVi
 class ResultResponseError(val error: String): ResultResponseViewState()
 class UserDocumentExists(val userExists: Boolean): ResultResponseViewState()
 class PatientDetailsSuccessResult(val data: PatientsDetails): ResultResponseViewState()
+class UserProfileImageUrlReturned(val imageUrl: String): ResultResponseViewState()

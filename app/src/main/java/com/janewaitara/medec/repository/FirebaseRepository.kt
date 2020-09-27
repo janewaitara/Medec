@@ -1,9 +1,12 @@
 package com.janewaitara.medec.repository
 
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageTask
 import com.janewaitara.medec.App
 import com.janewaitara.medec.model.*
 import com.janewaitara.medec.model.result.EmptySuccess
@@ -12,10 +15,16 @@ import com.janewaitara.medec.model.result.Result
 import com.janewaitara.medec.model.result.Success
 
 
-class FirebaseRepository(var fireStore: FirebaseFirestore) {
+class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: FirebaseStorage) {
+
+    var patientsImagesStorageReference = firebaseStorage.reference.child(PATIENTS_PROFILE_IMAGE)
+
+
     companion object {
         const val DOCTOR_COLLECTION = "doctors"
         const val PATIENT_COLLECTION = "patients"
+        const val PATIENTS_PROFILE_IMAGE = "Patients Profile Images"
+        const val DOCTORS_PROFILE_IMAGE = "Doctors Profile Images"
     }
 
     init {
@@ -36,9 +45,13 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
             }
 
     }
+
     /**
      * Get nearBy doctors */
-    fun getNearByDoctorsFromFireStore(userLocation: String, onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit){
+    fun getNearByDoctorsFromFireStore(
+        userLocation: String,
+        onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit
+    ) {
         fireStore.collection(DOCTOR_COLLECTION)
             .whereEqualTo("docLocation", userLocation)
             .get()
@@ -48,13 +61,13 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
                     onDoctorsReturned.invoke(
                         Success(nearByDoctors)
                     )
-                }else{
+                } else {
                     onDoctorsReturned.invoke(
                         EmptySuccess("There are no doctors near you")
                     )
                 }
             }
-            .addOnFailureListener { exception->
+            .addOnFailureListener { exception ->
                 onDoctorsReturned.invoke(
                     Failure(exception)
                 )
@@ -66,16 +79,17 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
     fun getDoctorsFromFireStore(onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit) {
         fireStore.collection(DOCTOR_COLLECTION)
             .get()
-            .addOnSuccessListener {taskQuerySnapShot ->
-                if (taskQuerySnapShot != null){
-                   var doctorsList =  taskQuerySnapShot.toObjects(DoctorsDetails::class.java)
+            .addOnSuccessListener { taskQuerySnapShot ->
+                if (taskQuerySnapShot != null) {
+                    var doctorsList = taskQuerySnapShot.toObjects(DoctorsDetails::class.java)
                     onDoctorsReturned.invoke(
                         Success(
                             doctorsList
                         )
                     )
-                }else{
-                    Toast.makeText(App.getAppContext(),"Document is empty", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(App.getAppContext(), "Document is empty", Toast.LENGTH_SHORT)
+                        .show()
                 }
             }
             .addOnFailureListener { exception ->
@@ -89,26 +103,22 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
 
     /**
      * used to confirm whether a certain user is in the userType collection*/
-    fun confirmUserExistsInCollection(userId: String, userType: String, onUserNameReturned: (result: Result<Boolean>) -> Unit ){
+    fun confirmUserExistsInCollection(
+        userId: String,
+        userType: String,
+        onUserNameReturned: (result: Result<Boolean>) -> Unit
+    ) {
         fireStore.collection("${userType}s")
             .document(userId)
             .get()
             .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()){
+                if (documentSnapshot.exists()) {
                     onUserNameReturned.invoke(Success(true))
-                    /*
-                    var userDetailsName = ""
-                    if (collection == DOCTOR_COLLECTION){
-                        userDetailsName = documentSnapshot.toObject(DoctorsDetails::class.java)!!.docName
-                    }else if (collection == PATIENT_COLLECTION){
-                        userDetailsName = documentSnapshot.toObject(PatientsDetails::class.java)!!.patientName
-                    }
-                    onUserNameReturned.invoke(Success(userDetailsName))*/
-                }else{
+                } else {
                     onUserNameReturned.invoke(Success(false))
                 }
             }
-            .addOnFailureListener { exception->
+            .addOnFailureListener { exception ->
                 onUserNameReturned.invoke(
                     Failure(exception)
                 )
@@ -145,7 +155,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
     }
 
     /**
-     * Updating Patients Details*/
+     * Updating Patients Location Details*/
     fun updatePatientLocation(patientsDetails: PatientsDetails) {
         fireStore.collection(PATIENT_COLLECTION)
             .document(patientsDetails.patId)
@@ -160,16 +170,19 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
 
     /**
      * get patient Detail*/
-    fun getPatientsDetails(userId: String, onPatientsDetailsReturned: (result: Result<PatientsDetails>) -> Unit){
+    fun getPatientsDetails(
+        userId: String,
+        onPatientsDetailsReturned: (result: Result<PatientsDetails>) -> Unit
+    ) {
         fireStore.collection(PATIENT_COLLECTION)
             .document(userId)
             .get()
-            .addOnSuccessListener { documentSnapShot->
-                if (documentSnapShot.exists()){
+            .addOnSuccessListener { documentSnapShot ->
+                if (documentSnapShot.exists()) {
                     val userDetails = documentSnapShot.toObject(PatientsDetails::class.java)
                     onPatientsDetailsReturned.invoke(Success(userDetails!!))
 
-                }else{
+                } else {
                     onPatientsDetailsReturned.invoke(
                         EmptySuccess("The user does not exist ")
                     )
@@ -179,6 +192,40 @@ class FirebaseRepository(var fireStore: FirebaseFirestore) {
                 onPatientsDetailsReturned.invoke(
                     Failure(exception)
                 )
+            }
+    }
+
+    fun uploadPatientsUserProfile(userId: String, imageUri: Uri,  onDownloadUriReturned: (result: Result<String>) -> Unit) {
+        var imageReference = patientsImagesStorageReference.child("{$userId}.jpg")
+
+        var uploadTask = imageReference.putFile(imageUri)
+            .continueWithTask { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let {
+                        throw it
+                    }
+                }
+                return@continueWithTask imageReference.downloadUrl
+            }.addOnCompleteListener {task->
+                if (task.isSuccessful){
+                    val url = task.result.toString()
+                    //overwriteUserDetails
+                    onDownloadUriReturned.invoke(Success(url))
+                }
+            }
+    }
+
+    /**
+     * Updating Patients profile Image*/
+    fun updatePatientProfileImage(patientsDetails: PatientsDetails) {
+        fireStore.collection(PATIENT_COLLECTION)
+            .document(patientsDetails.patId)
+            .update("patientImageUrl", patientsDetails.patientImageUrl)
+            .addOnSuccessListener {
+                Log.d("FireStore", "Updated location for: ${patientsDetails.patientName}")
+            }
+            .addOnFailureListener {
+                Log.d("FireStore", "Error updating location details to firestore  with error: $it")
             }
     }
 
