@@ -169,14 +169,32 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
     }
 
     /**
-     * get patient Detail*/
+     * get realtime patient Detail*/
     fun getPatientsDetails(
         userId: String,
         onPatientsDetailsReturned: (result: Result<PatientsDetails>) -> Unit
     ) {
         fireStore.collection(PATIENT_COLLECTION)
             .document(userId)
-            .get()
+            .addSnapshotListener { value, error ->
+                error?.let { exception->
+                    onPatientsDetailsReturned.invoke(
+                        Failure(exception)
+                    )
+                }
+                value?.let { documentSnapshot ->
+                    if (documentSnapshot.exists()) {
+                        val userDetails = documentSnapshot.toObject(PatientsDetails::class.java)
+                        onPatientsDetailsReturned.invoke(Success(userDetails!!))
+
+                    } else {
+                        onPatientsDetailsReturned.invoke(
+                            EmptySuccess("The user does not exist ")
+                        )
+                    }
+                }
+            }
+            /*.get()
             .addOnSuccessListener { documentSnapShot ->
                 if (documentSnapShot.exists()) {
                     val userDetails = documentSnapShot.toObject(PatientsDetails::class.java)
@@ -192,7 +210,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                 onPatientsDetailsReturned.invoke(
                     Failure(exception)
                 )
-            }
+            }*/
     }
 
     fun uploadPatientsUserProfile(userId: String, imageUri: Uri,  onDownloadUriReturned: (result: Result<String>) -> Unit) {
