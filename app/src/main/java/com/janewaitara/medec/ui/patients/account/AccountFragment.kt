@@ -12,13 +12,17 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
 import com.janewaitara.medec.common.extensions.onClick
 import com.janewaitara.medec.model.PatientsDetails
+import com.janewaitara.medec.model.result.PatientDetailsSuccessResult
+import com.janewaitara.medec.model.result.ResultResponseError
 import com.janewaitara.medec.model.result.ResultResponseViewState
 import com.janewaitara.medec.model.result.UserProfileImageUrlReturned
 import com.janewaitara.medec.ui.patients.home.HomeViewModel
+import kotlinx.android.synthetic.main.doctors_near_by.view.*
 import kotlinx.android.synthetic.main.fragment_account.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -41,7 +45,18 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userId =  FirebaseAuth.getInstance().currentUser!!.uid
+        subscribeToData()
         uploadProfile()
+    }
+
+    private fun subscribeToData() {
+        accountsViewModel.getPatientDetailsFromFireStore(userId!!)
+        
+        accountsViewModel.getPatientDetailsLiveData().observe(viewLifecycleOwner, Observer { resultResponseViewState ->
+            resultResponseViewState?.let { responseViewState->
+                onResultViewStateChanged(responseViewState)
+            }
+        })
     }
 
     private fun uploadProfile() {
@@ -92,7 +107,21 @@ class AccountFragment : Fragment() {
     private fun onResultViewStateChanged(resultViewState: ResultResponseViewState) {
         when(resultViewState){
             is UserProfileImageUrlReturned -> updateUserDetails(resultViewState.imageUrl)
+            is PatientDetailsSuccessResult -> displayUserDetails(resultViewState.data)
+            is ResultResponseError -> showErrorMessage(resultViewState.error)
         }
+    }
+
+    private fun showErrorMessage(error: String) {
+        Toast.makeText(activity, error, Toast.LENGTH_LONG).show()
+    }
+
+    private fun displayUserDetails(patientDetails: PatientsDetails) {
+        patient_name.text = patientDetails.patientName
+        patient_contacts.text = patientDetails.patientContact.toString()
+        Glide.with(patient_image.context)
+            .load(patientDetails.patientImageUrl)
+            .into(patient_image)
     }
 
     private fun updateUserDetails(imageUrl: String) {

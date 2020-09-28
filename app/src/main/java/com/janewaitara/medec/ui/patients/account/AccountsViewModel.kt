@@ -15,6 +15,9 @@ class AccountsViewModel( private val firebaseRepository: FirebaseRepository)
     private val imageUrlMutableLiveData  = MutableLiveData<ResultResponseViewState>()
     fun getImageUrlLiveData() = imageUrlMutableLiveData
 
+    private val patientDetailsListMutableLiveData = MutableLiveData<ResultResponseViewState>()
+    fun getPatientDetailsLiveData() = patientDetailsListMutableLiveData
+
     fun uploadPatientUserProfile(userId: String, imageUri: Uri){
         viewModelScope.launch {
             firebaseRepository.uploadPatientsUserProfile(userId, imageUri){result->
@@ -37,6 +40,32 @@ class AccountsViewModel( private val firebaseRepository: FirebaseRepository)
     fun updatePatientProfileImage(patientsDetails: PatientsDetails){
         viewModelScope.launch {
             firebaseRepository.updatePatientProfileImage(patientsDetails)
+        }
+    }
+
+    fun getPatientDetailsFromFireStore(userId: String){
+        viewModelScope.launch {
+            firebaseRepository.getPatientsDetails(userId){ result ->
+                when(result){
+                    is Success -> {
+                        patientDetailsListMutableLiveData.postValue(
+                            PatientDetailsSuccessResult(result.data)
+                        )
+                    }
+
+                    is Failure -> {
+                        patientDetailsListMutableLiveData.postValue(
+                            ResultResponseError(result.error.localizedMessage ?: "")
+                        )
+                    }
+
+                    is EmptySuccess -> {
+                        patientDetailsListMutableLiveData.postValue(
+                            ResultResponseError(result.message)
+                        )
+                    }
+                }
+            }
         }
     }
 }
