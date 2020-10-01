@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/doctors_nav_graph.xml"
+    app:startDestination="@id/doctorChatsFragment">
+
+    <fragment
+        android:id="@+id/doctorChatsFragment"
+        android:name="com.janewaitara.medec.ui.doctors.chats.DoctorChatsFragment"
+        android:label="fragment_doctor_chats"
+        tools:layout="@layout/fragment_doctor_chats" />
+    <fragment
+        android:id="@+id/doctorsAccountFragment"
+        android:name="com.janewaitara.medec.ui.doctors.accounts.DoctorsAccountFragment"
+        android:label="fragment_doctors_account"
+        tools:layout="@layout/fragment_doctors_account" />
+</navigation>

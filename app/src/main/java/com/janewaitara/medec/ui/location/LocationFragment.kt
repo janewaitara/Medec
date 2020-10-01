@@ -121,6 +121,12 @@ class LocationFragment : Fragment(), CountyAdapter.CountyClickListener {
                 locationViewModel.updateDoctorLocation(doctorsDetails)
 
                 Toast.makeText(activity, "Updated User Location", Toast.LENGTH_LONG).show()
+                /**
+                 * navigate to Doctors page*/
+                view?.let {
+                    val action = LocationFragmentDirections.actionLocationFragmentToDoctorsFragment()
+                    it.findNavController().navigate(action)
+                }
             }
             "patient" -> {
                 val patientsDetails = PatientsDetails().apply {
