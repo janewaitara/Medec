@@ -9,7 +9,7 @@ tools:context=".ui.doctors.chats.DoctorChatsFragment">
     android:id="@+id/doctors_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:listitem="@layout/doctors_chat_list" />
+    tools:listitem="@layout/chat_list" />
 
 </RelativeLayout>
 

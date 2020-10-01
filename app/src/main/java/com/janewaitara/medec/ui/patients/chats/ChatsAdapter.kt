@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import com.janewaitara.medec.R
 import com.janewaitara.medec.model.DoctorsDetails
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.doctors_chat_list.view.*
+import kotlinx.android.synthetic.main.chat_list.view.*
 
 
 class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener): RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder>() {
@@ -21,7 +21,7 @@ class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatsViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.doctors_chat_list, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.chat_list, parent, false)
         return ChatsViewHolder(view)
     }
 
@@ -38,7 +38,7 @@ class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener)
     class ChatsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
       //var chatDocImage = itemView.findViewById(R.id.chat_doctor_image) as CircleImageView
       //var chatDocName = itemView.findViewById(R.id.chat_doctor_name) as TextView
-      var chatDocLastMsg = itemView.findViewById(R.id.doctor_last_message) as TextView
+      var chatDocLastMsg = itemView.findViewById(R.id.user_last_message) as TextView
      // var chatDocLocation = itemView.findViewById(R.id.chat_doctor_location) as TextView
       var chatDocOnlineStatus = itemView.findViewById(R.id.doctor_online_status) as CircleImageView
       var chatDocOfflineStatus = itemView.findViewById(R.id.doctor_offline_status) as CircleImageView
@@ -46,13 +46,13 @@ class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener)
 
         fun bind(doctorDetails: DoctorsDetails){
             itemView.apply {
-                Glide.with(chat_doctor_image.context)
+                Glide.with(chat_user_image.context)
                     .load(doctorDetails.docImageUrl)
                     .placeholder(R.drawable.nurse)
-                    .into(chat_doctor_image)
+                    .into(chat_user_image)
 
-                chat_doctor_name.text = doctorDetails.docName
-                chat_doctor_location.text = doctorDetails.docLocation
+                chat_user_name.text = doctorDetails.docName
+                chat_user_location.text = doctorDetails.docLocation
 
             }
         }

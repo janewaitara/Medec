@@ -7,8 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.janewaitara.medec.R
 
-class DoctorChatsFragment : Fragment() {
-
+class DoctorChatsFragment : Fragment(), DoctorsChatAdapter.ChatPatientClickListener {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,6 +15,10 @@ class DoctorChatsFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_doctor_chats, container, false)
+    }
+
+    override fun chatPatientClickListener(patientId: String) {
+        TODO("Not yet implemented")
     }
 
 }

@@ -37,9 +37,14 @@
     <string name="see_all">See All</string>
     <string name="doctor_image">Doctor Image</string>
     <string name="doctor_location">Doctor\'s Location</string>
-    <string name="doctor_last_message">Doctor Last Message : Hello Dear Patient, How can I help You</string>
+    <string name="user_last_message">Doctor Last Message : Hello Dear Patient, How can I help You</string>
     <string name="edit_your_profile">Edit Your profile</string>
     <string name="patient_contacts">Patient Contacts</string>
     <string name="patient_name">Patient Name</string>
+    <string name="user_image">User Image</string>
+    <string name="user_name">User Name</string>
+    <string name="user_location">User Location</string>
+    <string name="online_status">Online status</string>
+    <string name="doctor_years_of_experience">Doctors Years of Experience</string>
 
 </resources>

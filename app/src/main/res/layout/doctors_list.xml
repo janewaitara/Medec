@@ -13,12 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:padding="10dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/doctor_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="10dp"
             android:contentDescription="@string/doctor_image"
             android:src="@drawable/nurse" />
 
@@ -36,19 +38,43 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/doctor_name"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="10dp"
             android:layout_toEndOf="@+id/doctor_image"
             android:text="@string/doctor_title" />
+        <TextView
+            android:id="@+id/doctor_years_of_experience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/doctor_title"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/doctor_image"
+            android:text="@string/doctor_years_of_experience" />
 
         <TextView
             android:id="@+id/doctor_location"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/doctor_title"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
+            android:layout_below="@+id/doctor_years_of_experience"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/doctor_image"
+            android:layout_marginTop="10dp"
+            android:layout_toStartOf="@+id/send_text_message"
             android:text="@string/doctor_location" />
+
+        <ImageView
+            android:id="@+id/send_text_message"
+            android:layout_width="40dp"
+            android:background="@drawable/circle_with_gradient"
+            android:src="@drawable/ic_text_message"
+            android:layout_height="40dp"
+            android:scaleType="center"
+            android:layout_marginTop="5dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/doctor_years_of_experience"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 

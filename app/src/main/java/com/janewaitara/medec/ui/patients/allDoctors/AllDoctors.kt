@@ -17,7 +17,7 @@ import com.janewaitara.medec.ui.patients.home.DoctorsRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_all_doctors.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener {
+class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener, AllDoctorsAdapter.SendTextMessageClickListener {
     private val allDoctorsViewModel: AllDoctorsViewModel by viewModel()
 
     override fun onCreateView(
@@ -57,13 +57,17 @@ class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener {
 
     private fun populateRecyclerView(doctorsList: List<DoctorsDetails>) {
         doctors_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        val adapter = AllDoctorsAdapter(this)
+        val adapter = AllDoctorsAdapter(this, this)
         doctors_list.adapter = adapter
 
         adapter.setDoctorsList(doctorsList)
     }
 
     override fun doctorDetailsClickListener(doctorId: String) {
-        TODO("Not yet implemented")
+        //navigate to doctors details
+    }
+
+    override fun sendDoctorTextMessageClickListener(doctorId: String) {
+        //navigate to chat fragment
     }
 }
