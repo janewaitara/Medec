@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageTask
 import com.janewaitara.medec.App
@@ -19,6 +20,9 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
 
     var patientsImagesStorageReference = firebaseStorage.reference.child(PATIENTS_PROFILE_IMAGE)
 
+    val chatChannelCollectionRef = fireStore.collection("chatChannels")
+
+    var confirmedUserType: String = ""
 
     companion object {
         const val DOCTOR_COLLECTION = "doctors"
@@ -78,7 +82,29 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
      * Get all doctors details*/
     fun getDoctorsFromFireStore(onDoctorsReturned: (result: Result<List<DoctorsDetails>>) -> Unit) {
         fireStore.collection(DOCTOR_COLLECTION)
-            .get()
+            .addSnapshotListener { value, error ->
+                error?.let { exception ->
+                    onDoctorsReturned.invoke(
+                        Failure(
+                            exception
+                        )
+                    )
+                }
+                value.let { taskQuerySnapShot ->
+                    if (taskQuerySnapShot != null) {
+                        var doctorsList = taskQuerySnapShot.toObjects(DoctorsDetails::class.java)
+                        onDoctorsReturned.invoke(
+                            Success(
+                                doctorsList
+                            )
+                        )
+                    } else {
+                        Toast.makeText(App.getAppContext(), "Document is empty", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
+        /*    .get()
             .addOnSuccessListener { taskQuerySnapShot ->
                 if (taskQuerySnapShot != null) {
                     var doctorsList = taskQuerySnapShot.toObjects(DoctorsDetails::class.java)
@@ -98,7 +124,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                         exception
                     )
                 )
-            }
+            }*/
     }
 
     /**
@@ -114,6 +140,8 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()) {
                     onUserNameReturned.invoke(Success(true))
+
+                    this.confirmedUserType = userType
                 } else {
                     onUserNameReturned.invoke(Success(false))
                 }
@@ -138,7 +166,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                 Log.d("FireStore", "Error updating location details to firestore  with error: $it")
             }
     }
-
 
     /**
      * Saving Patients Details*/
@@ -177,7 +204,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
         fireStore.collection(PATIENT_COLLECTION)
             .document(userId)
             .addSnapshotListener { value, error ->
-                error?.let { exception->
+                error?.let { exception ->
                     onPatientsDetailsReturned.invoke(
                         Failure(exception)
                     )
@@ -194,26 +221,14 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                     }
                 }
             }
-            /*.get()
-            .addOnSuccessListener { documentSnapShot ->
-                if (documentSnapShot.exists()) {
-                    val userDetails = documentSnapShot.toObject(PatientsDetails::class.java)
-                    onPatientsDetailsReturned.invoke(Success(userDetails!!))
 
-                } else {
-                    onPatientsDetailsReturned.invoke(
-                        EmptySuccess("The user does not exist ")
-                    )
-                }
-            }
-            .addOnFailureListener { exception ->
-                onPatientsDetailsReturned.invoke(
-                    Failure(exception)
-                )
-            }*/
     }
 
-    fun uploadPatientsUserProfile(userId: String, imageUri: Uri,  onDownloadUriReturned: (result: Result<String>) -> Unit) {
+    fun uploadPatientsUserProfile(
+        userId: String,
+        imageUri: Uri,
+        onDownloadUriReturned: (result: Result<String>) -> Unit
+    ) {
         var imageReference = patientsImagesStorageReference.child("{$userId}.jpg")
 
         var uploadTask = imageReference.putFile(imageUri)
@@ -224,8 +239,8 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                     }
                 }
                 return@continueWithTask imageReference.downloadUrl
-            }.addOnCompleteListener {task->
-                if (task.isSuccessful){
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
                     val url = task.result.toString()
                     //overwriteUserDetails
                     onDownloadUriReturned.invoke(Success(url))
@@ -246,5 +261,120 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                 Log.d("FireStore", "Error updating location details to firestore  with error: $it")
             }
     }
+
+    /**
+     * Send message to user*/
+    fun sendMessage() {
+
+    }
+
+    /**
+     * */
+    fun getOrCreateChatChannel(
+        userId: String,
+        messageReceiverId: String,
+        onComplete: (channelId: Result<String>) -> Unit
+    ) {
+        /**we need to know in which chat channels one is
+         * chatting from hence we add a collection to
+         * each user for chat channels*/
+
+        val currentUserReference = if (confirmedUserType == "doctor") {
+            fireStore.collection(DOCTOR_COLLECTION)
+                .document(userId)
+        } else {
+            fireStore.collection(PATIENT_COLLECTION)
+                .document(userId)
+        }
+
+        val messageRecipientReference = if (confirmedUserType == "doctor") {
+            fireStore.collection(PATIENT_COLLECTION)
+                .document(messageReceiverId)
+        } else {
+            fireStore.collection(DOCTOR_COLLECTION)
+                .document(messageReceiverId)
+
+        }
+
+        currentUserReference
+            .collection("engagedChatChannels")
+            .document(messageReceiverId)
+            .get()
+            .addOnSuccessListener { documentSnapShot ->
+                if (documentSnapShot.exists()) {
+                    //meaning we are already chatting with recipient
+                    onComplete.invoke(Success((documentSnapShot["channelId"] as String)))
+                    return@addOnSuccessListener
+                } else {
+                    //if doesn't exists, we create it
+                    val newChannel = chatChannelCollectionRef.document()
+                    newChannel.set(ChatChannel(mutableListOf(userId, messageReceiverId)))
+
+                    //saving channel id to user who will chat together
+                    currentUserReference
+                        .collection("engagedChatChannels")
+                        .document(messageReceiverId)
+                        .set(mapOf("channelId" to newChannel.id))
+
+                    //saving the channel to the messageRecipient engagedChatChannels
+                   messageRecipientReference
+                        .collection("engagedChatChannels")
+                        .document(userId)
+                        .set(mapOf("channelId" to newChannel.id))
+
+                    onComplete.invoke(
+                        Success(
+                            (newChannel.id)
+                        )
+                    )
+                }
+            }
+            .addOnFailureListener { exception ->
+                onComplete.invoke(
+                    Failure(
+                        exception
+                    )
+                )
+            }
+    }
+
+    /**
+     * Listening for all Messages inside a channel*/
+
+    fun addChatMessageListener(
+        channelId: String,
+        onChatsReturned: (result: Result<List<TextMessage>>) -> Unit
+    ): ListenerRegistration {
+        return chatChannelCollectionRef.document(channelId).collection("messages").orderBy("time")
+            .addSnapshotListener { value, error ->
+                error?.let { firebaseFirestoreException ->
+                    onChatsReturned.invoke(
+                        Failure(
+                            firebaseFirestoreException
+                        )
+                    )
+                    Log.e("FIRESTORE", "ChatMessageListener error", firebaseFirestoreException)
+                    return@addSnapshotListener
+                }
+
+                value?.let { querySnapShot ->
+                    val items = mutableListOf<TextMessage>()
+                    querySnapShot.documents.forEach { documentSnapShot ->
+                        if (documentSnapShot["type"] == MessageType.TEXT) {
+                            // items.add(documentSnapShot.toObject(TextMessage::class.java))
+                            documentSnapShot.toObject(TextMessage::class.java)
+                                ?.let { items.add(it) }
+                        } else {
+                            //if type of msg is image
+                            TODO("Add Image message")
+                        }
+                    }
+                    onChatsReturned.invoke(
+                        Success(items)
+                    )
+                }
+            }
+    }
+
 
 }

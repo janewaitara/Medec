@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:padding="5dp"
     android:background="#ECECEC"
-    tools:context=".ui.patients.allDoctors.AllDoctors">
+    tools:context=".ui.patients.allDoctors.AllDoctorsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/doctors_list"

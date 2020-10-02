@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.janewaitara.medec.R
 import com.janewaitara.medec.model.DoctorsDetails
@@ -17,7 +18,7 @@ import com.janewaitara.medec.ui.patients.home.DoctorsRecyclerAdapter
 import kotlinx.android.synthetic.main.fragment_all_doctors.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener, AllDoctorsAdapter.SendTextMessageClickListener {
+class AllDoctorsFragment : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener, AllDoctorsAdapter.SendTextMessageClickListener {
     private val allDoctorsViewModel: AllDoctorsViewModel by viewModel()
 
     override fun onCreateView(
@@ -67,7 +68,14 @@ class AllDoctors : Fragment(), AllDoctorsAdapter.DoctorDetailsClickListener, All
         //navigate to doctors details
     }
 
-    override fun sendDoctorTextMessageClickListener(doctorId: String) {
-        //navigate to chat fragment
+    override fun sendDoctorTextMessageClickListener(
+        doctorId: String,
+        doctorName: String,
+        doctorProfileImage: String
+    ) {
+       view.let {
+           val action = AllDoctorsFragmentDirections.actionAllDoctorsToChatMessagingFragment(doctorId, doctorName, doctorProfileImage)
+           findNavController().navigate(action)
+       }
     }
 }

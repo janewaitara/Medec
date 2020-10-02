@@ -26,7 +26,26 @@
         tools:layout="@layout/fragment_account" />
     <fragment
         android:id="@+id/allDoctors"
-        android:name="com.janewaitara.medec.ui.patients.allDoctors.AllDoctors"
+        android:name="com.janewaitara.medec.ui.patients.allDoctors.AllDoctorsFragment"
         android:label="fragment_all_doctors"
-        tools:layout="@layout/fragment_all_doctors" />
+        tools:layout="@layout/fragment_all_doctors" >
+        <action
+            android:id="@+id/action_allDoctors_to_chatMessagingFragment"
+            app:destination="@id/chatMessagingFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatMessagingFragment"
+        android:name="com.janewaitara.medec.ui.patients.chatMessaging.ChatMessagingFragment"
+        android:label="fragment_chat_messaging"
+        tools:layout="@layout/fragment_chat_messaging" >
+        <argument
+            android:name="messageRecipientId"
+            app:argType="string" />
+        <argument
+            android:name="messageRecipientName"
+            app:argType="string" />
+        <argument
+            android:name="messageRecipientProfilePictureUrl"
+            app:argType="string" />
+    </fragment>
 </navigation>

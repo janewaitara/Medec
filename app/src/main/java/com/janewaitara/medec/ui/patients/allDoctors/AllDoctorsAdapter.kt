@@ -22,7 +22,7 @@ class AllDoctorsAdapter(private val doctorDetailsClickListener: DoctorDetailsCli
     }
 
     interface SendTextMessageClickListener{
-        fun sendDoctorTextMessageClickListener(doctorId: String)
+        fun sendDoctorTextMessageClickListener(doctorId: String, doctorName: String, doctorProfileImage: String)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllDoctorsDetailsViewHolder {
@@ -39,7 +39,10 @@ class AllDoctorsAdapter(private val doctorDetailsClickListener: DoctorDetailsCli
         }
 
         holder.sendTextIcon.setOnClickListener {
-            sendTextMessageClickListener.sendDoctorTextMessageClickListener(doctorsList[position].docId)
+            sendTextMessageClickListener.sendDoctorTextMessageClickListener(
+                doctorsList[position].docId,
+                doctorsList[position].docName,
+                doctorsList[position].docImageUrl)
         }
     }
     internal fun setDoctorsList(doctorsList: List<DoctorsDetails>){
