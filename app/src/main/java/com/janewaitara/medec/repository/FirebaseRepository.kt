@@ -51,6 +51,12 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
             }
 
     }
+  /*  fun updateDoctorDetails(doctorsDetails: DoctorsDetails){
+        fireStore.collection(DOCTOR_COLLECTION)
+            .document(doctorsDetails.docId)
+            .update(doctorsDetails)
+            .a
+    }*/
 
     /**
      * Get nearBy doctors */

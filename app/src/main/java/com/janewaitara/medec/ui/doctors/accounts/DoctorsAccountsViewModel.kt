@@ -86,4 +86,10 @@ class DoctorsAccountsViewModel ( private val firebaseRepository: FirebaseReposit
         }
     }
 
+    fun saveDoctorDetails(doctorsDetails: DoctorsDetails){
+        viewModelScope.launch {
+            firebaseRepository.saveDoctorDetails(doctorsDetails)
+        }
+    }
+
 }

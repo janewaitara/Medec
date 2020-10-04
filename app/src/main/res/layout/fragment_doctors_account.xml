@@ -106,7 +106,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_fullName"
+                android:id="@+id/edit_doc_fullName"
                 android:inputType="textPersonName"
                 android:layout_width="match_parent"
                 android:textColor="@color/colorPrimaryDark"
@@ -152,11 +152,11 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_titleWrapper">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_coursePursued"
+                android:id="@+id/edit_doc_coursePursued"
                 android:layout_width="match_parent"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark"
-                android:inputType="textPassword"
+                android:inputType="text"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -176,11 +176,11 @@
             app:layout_constraintVertical_bias="0.050">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_phone"
+                android:id="@+id/edit_doc_phone"
                 android:layout_width="match_parent"
                 android:textColorHint="@color/colorPrimaryDark"
                 android:textColor="@color/colorPrimaryDark"
-                android:inputType="text"
+                android:inputType="textPhonetic"
                 android:layout_height="wrap_content"/>
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -198,7 +198,7 @@
             app:layout_constraintTop_toBottomOf="@+id/edit_phoneWrapper">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_yearsExperience"
+                android:id="@+id/edit_doc_yearsExperience"
                 android:layout_width="match_parent"
                 android:textColor="@color/colorPrimaryDark"
                 android:textColorHint="@color/colorPrimaryDark"
@@ -207,7 +207,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btn_register"
+            android:id="@+id/btn_save_doc_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
