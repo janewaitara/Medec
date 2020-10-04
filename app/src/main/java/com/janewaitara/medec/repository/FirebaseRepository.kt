@@ -20,6 +20,7 @@ import com.janewaitara.medec.model.result.Success
 class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: FirebaseStorage) {
 
     var patientsImagesStorageReference = firebaseStorage.reference.child(PATIENTS_PROFILE_IMAGE)
+    var doctorsImagesStorageReference = firebaseStorage.reference.child(DOCTORS_PROFILE_IMAGE)
 
     val chatChannelCollectionRef = fireStore.collection("chatChannels")
 
@@ -228,7 +229,55 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                 }
             }
     }
-    
+    /**
+     * Uploading Doctors profile Image to firebase storage*/
+    fun uploadDoctorsProfileImageToStorage(doctorsId: String,imageUri: Uri, onDoctorsImageDownloadUriReturned: (result: Result<String>) -> Unit){
+
+        val docImageReference = doctorsImagesStorageReference.child("{$doctorsId}.jpg")
+
+        docImageReference.putFile(imageUri)
+            .continueWithTask { uploadTaskSnapShot ->
+                if (!uploadTaskSnapShot.isSuccessful){
+                    uploadTaskSnapShot.exception?.let {
+                        throw it
+                    }
+                }
+                return@continueWithTask docImageReference.downloadUrl
+            }
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful){
+                    val url = task.result.toString()
+                    onDoctorsImageDownloadUriReturned.invoke(
+                        Success(url)
+                    )
+                }else{
+                    onDoctorsImageDownloadUriReturned.invoke(
+                        Failure(task.exception!!)
+                    )
+                }
+
+            }
+    }
+    /**
+     * Updating Doctor profile Image*/
+    fun updateDoctorProfileImage(doctorsDetails: DoctorsDetails, onDocProfileImageUpdate: (result: Result<String>) -> Unit){
+        fireStore.collection(DOCTOR_COLLECTION)
+            .document(doctorsDetails.docId)
+            .update("docImageUrl", doctorsDetails.docImageUrl)
+            .addOnSuccessListener {
+                onDocProfileImageUpdate.invoke(
+                    Success("Doc profile Image updated")
+                )
+            }
+            .addOnFailureListener {exception ->
+                onDocProfileImageUpdate.invoke(
+                    Failure(
+                        exception
+                    )
+                )
+            }
+    }
+
     /**
      * get realtime patient Detail*/
     fun getPatientsDetails(
@@ -257,7 +306,8 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
             }
 
     }
-
+    /**
+     * Uploading Patients profile Image to firebase storage*/
     fun uploadPatientsUserProfile(
         userId: String,
         imageUri: Uri,

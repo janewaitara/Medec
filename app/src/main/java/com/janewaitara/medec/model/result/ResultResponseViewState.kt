@@ -17,3 +17,4 @@ class LastTextMessageSuccessResult(val textMessage: TextMessage): ResultResponse
 class ChannelIdSuccessResult(val data: String): ResultResponseViewState()
 class RecipientsIdSuccessResult(val channelIdList: List<ChannelId>): ResultResponseViewState()
 class EmptySuccessMessage(val emptyMessage: String): ResultResponseViewState()
+class UserProfilePicUpdateSuccessResult(val message: String): ResultResponseViewState()
