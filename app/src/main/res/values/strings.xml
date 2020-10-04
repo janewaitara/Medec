@@ -46,5 +46,6 @@
     <string name="user_location">User Location</string>
     <string name="online_status">Online status</string>
     <string name="doctor_years_of_experience">Doctors Years of Experience</string>
+    <string name="sample_message_time_stamp">2/10/2020 01:04 AM</string>
 
 </resources>

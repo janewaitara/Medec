@@ -1,9 +1,11 @@
 package com.janewaitara.medec.ui.patients.chatMessaging
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.ListenerRegistration
+import com.janewaitara.medec.model.Message
 import com.janewaitara.medec.model.result.*
 import com.janewaitara.medec.repository.FirebaseRepository
 import kotlinx.coroutines.launch
@@ -52,6 +54,8 @@ class ChatMessagingViewModel(private val firebaseRepository: FirebaseRepository)
                             textMessagesMutableLiveData.postValue(
                                 TextMessagesListSuccessResult(result.data)
                             )
+                            Log.e("Messages", result.data.toString())
+
                         }
                         is Failure -> {
                             textMessagesMutableLiveData.postValue(
@@ -61,6 +65,12 @@ class ChatMessagingViewModel(private val firebaseRepository: FirebaseRepository)
                     }
                 }
             messagesListenerRegistrationMutableLiveData.postValue(messagesListenerRegistration)
+        }
+    }
+
+    fun sendMessage(message: Message, channelId: String) {
+        viewModelScope.launch {
+            firebaseRepository.sendMessage(message, channelId)
         }
     }
 }

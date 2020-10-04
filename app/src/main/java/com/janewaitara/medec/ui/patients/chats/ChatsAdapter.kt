@@ -7,14 +7,16 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.janewaitara.medec.R
-import com.janewaitara.medec.model.DoctorsDetails
+import com.janewaitara.medec.model.ChannelId
+import com.janewaitara.medec.model.ChatUserDetails
 import de.hdodenhof.circleimageview.CircleImageView
 import kotlinx.android.synthetic.main.chat_list.view.*
+import kotlinx.android.synthetic.main.chat_list_sample.view.*
 
 
 class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener): RecyclerView.Adapter<ChatsAdapter.ChatsViewHolder>() {
 
-    private var doctorsList = emptyList<DoctorsDetails>()
+    private var doctorsList = emptyList<ChatUserDetails>()
 
     interface ChatDoctorClickListener{
         fun chatDoctorClickListener(doctorId: String)
@@ -30,9 +32,15 @@ class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener)
     override fun onBindViewHolder(holder: ChatsViewHolder, position: Int) {
         holder.bind(doctorsList[position])
 
+        /*holder.bind(recipientsIdList[position])*/
         holder.itemView.setOnClickListener {
-            chatDoctorClickListener.chatDoctorClickListener(doctorsList[position].docId)
+            chatDoctorClickListener.chatDoctorClickListener(doctorsList[position].recipientId)
         }
+    }
+
+    internal fun setChatDoctorList(chatDoctorList: List<ChatUserDetails>){
+        this.doctorsList =chatDoctorList
+        notifyDataSetChanged()
     }
 
     class ChatsViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
@@ -44,18 +52,19 @@ class ChatsAdapter(private val chatDoctorClickListener: ChatDoctorClickListener)
       var chatDocOfflineStatus = itemView.findViewById(R.id.doctor_offline_status) as CircleImageView
 
 
-        fun bind(doctorDetails: DoctorsDetails){
+        fun bind(chatDoctorDetails:ChatUserDetails){
             itemView.apply {
                 Glide.with(chat_user_image.context)
-                    .load(doctorDetails.docImageUrl)
+                    .load(chatDoctorDetails.recipientImageUrl)
                     .placeholder(R.drawable.nurse)
                     .into(chat_user_image)
 
-                chat_user_name.text = doctorDetails.docName
-                chat_user_location.text = doctorDetails.docLocation
-
+                chat_user_name.text = chatDoctorDetails.recipientName
+                chat_user_location.text = chatDoctorDetails.recipientLocation
+                chatDocLastMsg.text = chatDoctorDetails.lastMessage
             }
         }
+
     }
 
 

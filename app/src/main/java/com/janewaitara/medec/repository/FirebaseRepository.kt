@@ -6,8 +6,9 @@ import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageTask
+import com.google.protobuf.Empty
 import com.janewaitara.medec.App
 import com.janewaitara.medec.model.*
 import com.janewaitara.medec.model.result.EmptySuccess
@@ -98,6 +99,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                                 doctorsList
                             )
                         )
+                        Log.d("Recipients Id", doctorsList.toString())
                     } else {
                         Toast.makeText(App.getAppContext(), "Document is empty", Toast.LENGTH_SHORT)
                             .show()
@@ -196,6 +198,38 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
     }
 
     /**
+     * Get realtime Doctor details */
+    fun getDoctorDetails(
+        doctorsId: String, 
+        onDoctorDetailsReturned: (result: Result<DoctorsDetails>) -> Unit){
+        Log.d("Text Message 4:2:1",doctorsId)
+        fireStore.collection(DOCTOR_COLLECTION)
+            .document(doctorsId)
+            .addSnapshotListener { value, error ->
+
+                Log.d("Text Message 4:3"," Reached")
+                error?.let { exception ->
+                    onDoctorDetailsReturned.invoke(
+                        Failure(exception)
+                    )
+                    Log.d("Text Message 4:4"," Reached")
+                }
+                value?.let { documentSnapshot->
+                    if (documentSnapshot.exists()){
+                        val doctorsDetails = documentSnapshot.toObject(DoctorsDetails::class.java)
+                        onDoctorDetailsReturned.invoke(Success(doctorsDetails!!))
+                        Log.d("Text Message 4:4",doctorsDetails.docName)
+                    }else{
+                        onDoctorDetailsReturned.invoke(
+                            EmptySuccess("The user does not exist")
+                        )
+                        Log.d("Text Message 4:5"," Reached")
+                    }
+                }
+            }
+    }
+    
+    /**
      * get realtime patient Detail*/
     fun getPatientsDetails(
         userId: String,
@@ -206,7 +240,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
             .addSnapshotListener { value, error ->
                 error?.let { exception ->
                     onPatientsDetailsReturned.invoke(
-                        Failure(exception)
+                       Failure(exception)
                     )
                 }
                 value?.let { documentSnapshot ->
@@ -263,12 +297,6 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
     }
 
     /**
-     * Send message to user*/
-    fun sendMessage() {
-
-    }
-
-    /**
      * */
     fun getOrCreateChatChannel(
         userId: String,
@@ -317,7 +345,7 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                         .set(mapOf("channelId" to newChannel.id))
 
                     //saving the channel to the messageRecipient engagedChatChannels
-                   messageRecipientReference
+                    messageRecipientReference
                         .collection("engagedChatChannels")
                         .document(userId)
                         .set(mapOf("channelId" to newChannel.id))
@@ -345,7 +373,10 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
         channelId: String,
         onChatsReturned: (result: Result<List<TextMessage>>) -> Unit
     ): ListenerRegistration {
-        return chatChannelCollectionRef.document(channelId).collection("messages").orderBy("time")
+        return chatChannelCollectionRef
+            .document(channelId)
+            .collection("messages")
+            .orderBy("time")
             .addSnapshotListener { value, error ->
                 error?.let { firebaseFirestoreException ->
                     onChatsReturned.invoke(
@@ -360,13 +391,15 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
                 value?.let { querySnapShot ->
                     val items = mutableListOf<TextMessage>()
                     querySnapShot.documents.forEach { documentSnapShot ->
-                        if (documentSnapShot["type"] == MessageType.TEXT) {
+                        if (documentSnapShot["messageType"] == MessageType.TEXT) {
                             // items.add(documentSnapShot.toObject(TextMessage::class.java))
                             documentSnapShot.toObject(TextMessage::class.java)
                                 ?.let { items.add(it) }
+
+                            Log.e("Messages firestore", items.toString())
                         } else {
                             //if type of msg is image
-                            TODO("Add Image message")
+                            /*//TODO("Add Image message")*/
                         }
                     }
                     onChatsReturned.invoke(
@@ -376,5 +409,79 @@ class FirebaseRepository(var fireStore: FirebaseFirestore, var firebaseStorage: 
             }
     }
 
+    /**
+     * Send message to user*/
+    fun sendMessage(message: Message, channelId: String) {
+        chatChannelCollectionRef
+            .document(channelId)
+            .collection("messages")
+            .add(message)
 
+    }
+
+    fun getEngagedChatsList(
+        userId: String,
+        onRecipientsIdsReturned: (result: Result<List<ChannelId>>) -> Unit
+    ) {
+        val currentUserReference = if (confirmedUserType == "doctor") {
+            fireStore.collection(DOCTOR_COLLECTION)
+                .document(userId)
+        } else {
+            fireStore.collection(PATIENT_COLLECTION)
+                .document(userId)
+        }
+
+        currentUserReference
+            .collection("engagedChatChannels")
+            .addSnapshotListener { value, error ->
+                error?.let { exception ->
+                    onRecipientsIdsReturned.invoke(
+                        Failure(exception)
+                    )
+                }
+                value.let { querySnapShot ->
+                    if (querySnapShot != null) {
+                        val messageRecipientsIds = querySnapShot.toObjects(ChannelId::class.java)
+                        onRecipientsIdsReturned.invoke(
+                            Success(
+                                messageRecipientsIds
+                            )
+                        )
+
+                        Log.d("Recipients Id", messageRecipientsIds.toString())
+                    } else {
+                        onRecipientsIdsReturned.invoke(
+                            EmptySuccess(
+                                "There are no chats yet"
+                            )
+                        )
+                    }
+                }
+            }
+    }
+
+    fun getChannelLastMessages(
+        channelId: String,
+        onMessageReturned: (result: Result<TextMessage>)-> Unit){
+        chatChannelCollectionRef.document(channelId)
+            .collection("messages")
+            .orderBy("time", Query.Direction.DESCENDING)
+            .limit(1)
+            .addSnapshotListener { value, error ->
+                error?.let { firebaseFirestoreException ->
+                    onMessageReturned.invoke(
+                        Failure(
+                            firebaseFirestoreException
+                        )
+                    )
+                }
+                value?.let {querySnapshot ->
+                    val lastTextMessage = querySnapshot.documents[0].toObject(TextMessage::class.java)
+                    Log.d("Text Message 001", lastTextMessage!!.messageReceiverId)
+                    onMessageReturned.invoke(Success(
+                        lastTextMessage!!
+                    ))
+                }
+            }
+    }
 }
