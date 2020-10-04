@@ -10,10 +10,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.janewaitara.medec.R
+import com.janewaitara.medec.common.extensions.isVisible
+import com.janewaitara.medec.common.extensions.onClick
 import com.janewaitara.medec.model.DoctorsDetails
 import com.janewaitara.medec.model.result.*
+import kotlinx.android.synthetic.main.fragment_account.*
+import kotlinx.android.synthetic.main.fragment_doctors_account.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DoctorsAccountFragment : Fragment() {
@@ -35,8 +40,12 @@ class DoctorsAccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userId =  FirebaseAuth.getInstance().currentUser!!.uid
+
         subscribeToData()
-       // uploadProfileImage()
+        uploadProfileImage()
+        edit_doc_profile_button.onClick {
+            edit_doc_details_form.isVisible(true)
+        }
     }
 
     private fun subscribeToData() {
@@ -49,8 +58,9 @@ class DoctorsAccountFragment : Fragment() {
         })
     }
     private fun uploadProfileImage() {
-        TODO("Not yet implemented")
-        pickImageFromLocalStrorage()
+        account_doc_image.onClick {
+            pickImageFromLocalStrorage()
+        }
     }
 
     private fun pickImageFromLocalStrorage() {
@@ -111,6 +121,16 @@ class DoctorsAccountFragment : Fragment() {
 
     private fun displayDoctorsDetails(doctorsDetails: DoctorsDetails) {
         Toast.makeText(activity, "Displaying Details", Toast.LENGTH_SHORT).show()
+
+        Glide.with(account_doc_image.context)
+            .load(doctorsDetails.docImageUrl)
+            .into(account_doc_image)
+
+        account_doc_name.text = doctorsDetails.docName
+        account_doc_contacts.text = doctorsDetails.doctorContact.toString()
+        account_doc_title.text = doctorsDetails.doctorsTitle
+        account_doc_years_ofExperience.text = doctorsDetails.yearsOfExperience
+
     }
 
     private fun showProfileUpdatedSuccess(message: String) {

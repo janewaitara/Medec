@@ -23,8 +23,12 @@ class MainActivity : AppCompatActivity() {
         /**
          * If the user is logged in, navigate to main activity
          * */
-        if(mFirebaseAuth.currentUser != null){
+        /*  if(mFirebaseAuth.currentUser != null){
            navController.navigate(R.id.patientsFragment)
+        }*/
+
+        if(mFirebaseAuth.currentUser != null){
+           navController.navigate(R.id.doctorsFragment)
         }
     }
 }

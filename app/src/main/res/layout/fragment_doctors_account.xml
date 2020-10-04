@@ -1,14 +1,224 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ECECEC">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ECECEC"
+    android:padding="15dp"
     tools:context=".ui.doctors.accounts.DoctorsAccountFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/card_profile"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_line_bg"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/account_doc_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/circle"
+            android:src="@drawable/nurse" />
+
+        <TextView
+            android:id="@+id/account_doc_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_doc_image"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:text="@string/doctor_name"
+            android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/account_doc_contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_doc_name"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:text="@string/doctor_contacts"
+            android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/account_doc_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_doc_contacts"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:text="@string/doctor_title"
+            android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/account_doc_years_ofExperience"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_doc_title"
+            android:layout_centerHorizontal="true"
+            android:paddingTop="10dp"
+            android:text="@string/doctor_years_of_experience"
+            android:textColor="@android:color/white" />
+        <Button
+            android:id="@+id/edit_doc_profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/account_doc_years_ofExperience"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/button_line_bg"
+            android:text="@string/edit_your_profile"
+            android:textAllCaps="false" />
+
+    </RelativeLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/edit_doc_details_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="15dp"
+        android:visibility="gone"
+        android:layout_gravity="center"
+        app:layout_constraintTop_toBottomOf="@+id/card_profile"
+        android:background="@android:color/white">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_nameWrapper"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            app:errorEnabled="true"
+            android:hint="@string/full_name_hint"
+            app:boxBackgroundMode="outline"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_fullName"
+                android:inputType="textPersonName"
+                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_titleWrapper"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:ems="10"
+            app:errorEnabled="true"
+            android:layout_height="wrap_content"
+            android:hint="@string/title_hint"
+            app:boxBackgroundMode="outline"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_nameWrapper"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_doc_title"
+                android:inputType="text"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_coursePursuedWrapper"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:ems="10"
+            android:layout_height="wrap_content"
+            android:hint="@string/course_hint"
+            app:boxBackgroundMode="outline"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_titleWrapper">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_coursePursued"
+                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:inputType="textPassword"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_phoneWrapper"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:ems="10"
+            android:layout_height="wrap_content"
+            android:hint="@string/phone_hint"
+            app:boxBackgroundMode="outline"
+            app:endIconMode="clear_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.318"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_coursePursuedWrapper"
+            app:layout_constraintVertical_bias="0.050">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_phone"
+                android:layout_width="match_parent"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:textColor="@color/colorPrimaryDark"
+                android:inputType="text"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_yearsExperienceWrapper"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:ems="10"
+            android:layout_height="wrap_content"
+            android:hint="@string/yearsOfExperience_hint"
+            app:boxBackgroundMode="outline"
+            app:errorEnabled="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_phoneWrapper">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_yearsExperience"
+                android:layout_width="match_parent"
+                android:textColor="@color/colorPrimaryDark"
+                android:textColorHint="@color/colorPrimaryDark"
+                android:inputType="text"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/button_round_corners"
+            android:text="@string/save_profile"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_yearsExperienceWrapper" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
